@@ -197,7 +197,7 @@
         <site>
           <id>sonatype-site</id>
           <name>Sonatype Book Examples</name>
-          <url>scp://deployer@172.16.0.1/var/www/domains/sonatype.com/books/htdocs/maven-book/</url>
+          <url>scp://deployer@svn.sonatype.com/var/www/domains/sonatype.com/books/htdocs/maven-book/</url>
         </site>
       </distributionManagement>
       <properties>

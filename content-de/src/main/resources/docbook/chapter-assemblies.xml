@@ -5,7 +5,7 @@
   <title>Maven Assemblies</title>
 
   <section id="assemblies-sect-intro">
-    <title>Introduction</title>
+    <title>Einführung</title>
 
     <para>Maven provides plugins that are used to create the most common
     archive types, most of which are consumable as dependencies of other
@@ -17,6 +17,18 @@
     to support standard packaging types, there are times when you'll need to
     create an archive or directory with a custom layout. Such custom archives
     are called Maven Assemblies.</para>
+
+    <para>Maven bietet Plugins welche eingesetzt werden können um die
+    häufigsten Typen von Archiven zu erzeugen. Die meisten derer können
+    wiederum von anderen Projekten als Abhängigkeit eingebunden werden. Einige
+    Beispiele hierfür sind JAR, WAR, EJB und EAR Plugins. Wie bereits im
+    Kapitel <xref linkend="lifecycle" /> angesprochen, entsprechen sich die
+    verschiedenen Packetierungstypen dieser Plugins den meist geringfügig
+    unteschiedlichen Build Prozessen. Während Maven mittels Plugins und
+    angepassten Lebenszyklen die standard Packagingtypen unterstützt, gibt es
+    dennoch Situationen in welchen Sie ein angepasstes Archive oder
+    Verzeichnis mit einenem spezifischen Layout erstellen müssen. Solche
+    angepasste Layoutstrukturen nennt man Assemblies.</para>
 
     <para>There are any number of reasons why you may want to build custom
     archives for your project. Perhaps the most common is the project
@@ -33,6 +45,23 @@
     Maven products, and the final archive you download from Sonatype was
     created using a Maven Assembly.</para>
 
+    <para>Es gibt eine Reihe guter Gründe warum Sie ein zugeschnittenes Archiv
+    für Ihr Pojekt erstellen würden. Der wichtigste Grund ist die Verteilung.
+    Das Wort "Verteilung" wird für unterschiedliche Personen (und Projekte)
+    ganz unterschiedliche Bedeutungen haben, abhängig davon, wie ein Projekt
+    zum Einsatz kommen soll. Im wesentlichen sind erlauben diese Archive eine
+    praktische Art die Projektergebnisse zu installieren oder anderweitig
+    zugänglich zu machen. In manchen Fällen kann dies bedeuten eine
+    Webanwendung mit einem Applikationsserver wie z.B. Jetty zu Bündeln. In
+    andern mag es bedeuten die Dokumentation eines API zusammen mit den
+    Quellen und den Binaries wie in eine Jar Datei zusammenzupacken.
+    Assemblies sind gewöhnlich nützlich, wenn Sie die endgültige Version eines
+    Produktes erstellen. Zum Beispiel sind Produkte wie Nexus, vorgestellt im
+    Kapitel <xref linkend="repository-manager" />, das Produkt eines grossen
+    multimodularen Maven Projektes, und das Archiv, welches Sie letztendlich
+    von Sonatype herunterladen wurde mittels einem Maven Assembly
+    erstellt.</para>
+
     <para>In most cases, the Assembly plugin is ideally suited to the process
     of building project distributions. However, assemblies don’t have to be
     distribution archives; assemblies are intended to provide Maven users with
@@ -45,10 +74,25 @@
     makes this unnecessary in most cases by providing generalized support for
     creating your own archive recipe without spending so much time writing
     Maven code.</para>
+
+    <para>In den meisten Fällen ist das Assembly Plugin am besten geeignet um
+    die Erstellung eines Projekt Verteilpacketes durchzuführen. Jedoch müssen
+    assemblies nicht unbedingt veteilbare Archive darstellen; Assemblies
+    bezwecken dem Maven Benutzer eine flexible Möglichkeit zu schaffen
+    massgeschneiderte ARchive jeglicher Art zu erstellen. Im wesentlichen sind
+    Assemblies dazu da, die Lücken zwischen den standard Archiv-Formaten wie
+    sie die Packetierungstypen bieten zu schliessen. Natürlich könnten Sie
+    auch ein komplettes Mave Plugin schreiben um Ihr speziefisches
+    Archivformat zu erstellen, zusammen mit der dazugehörenden
+    Lebenszyklusabbildung und der Konfiguration der Artefaktverarbeitung um
+    Maven zu beschreiben was zu tun ist. Assemblies machen diesen Aufwand in
+    den meisten Fällen unnötig indem sie eine generalisierte Unterstützung der
+    Erstellung Ihrer eigenen Archivtypen bieten ohne allzuviel Zeit darauf zu
+    verwenden Maven Code zu erstellen.</para>
   </section>
 
   <section id="assemblies-sect-basics">
-    <title>Assembly Basics</title>
+    <title>Assembly Grundlagen</title>
 
     <para>Before we go any further, it’s best to take a minute and talk about
     the two main goals in the Assembly plugin:
@@ -61,6 +105,17 @@
     build, and should be bound to a phase in your project’s build
     lifecycle.</para>
 
+    <para>Vor wir uns nun in die Details stürtzen bietet es sich an, erst noch
+    über die zwei Haupt Goals Des Maven Assembly Plugin zu reden:
+    assembly:assembly sowie singel mojo. Ich führe diese zwei Goals in
+    unterschiedlicher Art und Weise auf, da dies besser aufzeigt, dass diese
+    zwei Goals ganz unterschiedlich eingesetzt werden. Das Goal
+    assembly:assembly ist darauf ausgelegt von der Befehlszeile gestartet zu
+    werden, und sollte niemals an eine Lebeszyklusphase gebunden werden. Das
+    Goal single mojo hingegen ist darauf ausgelegt, Teil des tägliche Build
+    Ablaufes darzustellen, es sollte wie die meisten Goals an eine Phase Ihres
+    Projekt Build Lebenszyklus gebunden werden. </para>
+
     <para>The main reason for this difference is that the
     <varname>assembly:assembly</varname> goal is what Maven terms an
     aggregator mojo; that is, a mojo which is designed to run at most once in
@@ -71,6 +126,17 @@
     execution of the <varname>package</varname> lifecycle phase to execute
     ahead of time, and can result in builds which end up executing the
     <varname>package</varname> phase twice.</para>
+
+    <para>Der Hauptgrund dieses Unterschieds ist, das das assembly:assembly
+    goal ein sogenanntes Aggregator mojo darstellt. Ein mojo welches darauf
+    ausgelegt ist, innerhalb eines Build Laufes nur einmal asugeführt werden,
+    unabhängig wieviele Projekte Teil des Build Laufes sind. Ein Aggregator
+    mojo bezieht seine Konfiguration vom Ursprungsprojekt, gewöhnlich dem
+    obersten POM oder direkt von der Befehlszeile. Sollte ein solches mojo an
+    eine Lebenszyklusphase gebunden werden, so kann dies unerwartete
+    Nebeneffekte haben, so kann es dazu führen, dass das Goal eine andrere
+    Phase vorgängig zur Ausführung bringt was darin endet, dass die
+    Paketierungs Phase zweimal durchlaufen wird. </para>
 
     <para>Because the <varname>assembly:assembly</varname> goal is an
     aggregator mojo, it raises some issues in multi-module Maven builds, and
@@ -89,6 +155,23 @@
     <varname>assembly:assembly</varname>, <varname>single</varname> will never
     force the execution of another lifecycle phase ahead of itself.</para>
 
+    <para>Da das Goal assembly:assembly ein Aggregator mojo darstellt bringt
+    dies etliche Probleme mit sich. Es sollte daher nur als einzelstehendes
+    mojo von der Befehlszeile aufgerufen werden. Binden Sie das Goal
+    assembly:assembly niemals an eine Lebenszyklusphase. assembly:assembly war
+    das ursprüngliche Goal des Plugins Assembly, es war nie darauf ausgelegt
+    Teil eines normalen Build Laufs zu sein. Als es sich herausstellte, dass
+    das erstellen von Assembly Archiven eine reguläre Anforderung an einen
+    Build Lauf darstellte wurde singel mojo entwickelt. Das mojo geht davon
+    aus, dass es an den richtigen Ort innerhalb eines Build Laufs gebunden
+    wurde, so dass es Zugriff auf die entsprechenden Dateien und Artefakte
+    hat, welche es zur erfolgreichen Ausführung innerhalb des Lebenszyklusses
+    eines grossen multi-modularen Maven Projekts braucht. In einer multi
+    modularen Umgebung wird das Goal single mojo so oft ausgeführt, wie dieses
+    an unterschiedliche POM gebunden ist. Im Gegensatz zum Goal
+    assembly:assembly wird single niemals die vorgängige Ausführung einer
+    andern Lebenszyklusphase erzwingen. </para>
+
     <para>The Assembly plugin provides several other goals in addition to
     these two. However, discussion of these other mojos is beyond the scope of
     this chapter, because they serve exotic or obsolete use cases, and because
@@ -97,8 +180,17 @@
     generated from the command line, and to <varname>single</varname> for
     assemblies bound to lifecycle phases.</para>
 
+    <para>Das Assembly Plugin stellt über diese zwei Goals hinaus etliche
+    weitere Goals zur Verfügung. Die Vorstellung dieser anderen mojos geht
+    jedoch weit über dieses Kapitel hinaus, da diese Goals exotische sowie
+    überholte Anwendungsfälle addressieren und darüber hinaus fast nie
+    gebraucht werden. Soweit möglich sollten Sie in jedem Fall das Goal
+    assembly:assembly benutzen um ein Assembly ab der Befehlszeile zu
+    erstellen, sowie das single mojo um dies an eine Lebenszyklusphase
+    gebunden zu tun.</para>
+
     <section id="assemblies-sect-predefined">
-      <title>Predefined Assembly Descriptors</title>
+      <title>Vordefinierte Assembly Descriptoren</title>
 
       <para>While many people opt to create their own archive recipes - called
       assembly descriptors - this isn’t strictly necessary. The Assembly
@@ -106,6 +198,13 @@
       that you can use immediately without writing a line of configuration.
       The following assembly descriptors are predefined in the Maven Assembly
       plugin:</para>
+
+      <para>Auch wenn viele Benutzer sich dafür entscheiden deren eigene Achiv
+      Beschreibungen zu erstellen, so ist dies genau genommen nicht notwendig.
+      Das Assembly Plugin bietet für mehrere verbreitete Archiv Typen bereits
+      eingebaute Beschreibungen welche Sie benutzen können ohen auch nur eine
+      Zeile Konfiguration zu schreiben. Die folgenden Assembly Deskriptoren
+      sind bereits im Maven Assembly Pluign vordefiniert: </para>
 
       <variablelist>
         <varlistentry>
@@ -118,6 +217,13 @@
             artifact, assuming this project builds a jar as its main artifact.
             Think of this as the smallest possible binary distribution for
             completely self-contained projects.</para>
+
+            <para>Der bin Deskriptor wird benutzt um die zum Projekt gehörige
+            LIZENZ, das README/LIESMICH sowie die HINWEIS-Datei mit den
+            Projekt Artefakten zusammenzupacken, wobei davon ausgegangen wird,
+            dass das Projekt ein JAR erstellt. Stellen Sie sich dies als die
+            kleinstmögliche Binärkomposition für in sich abgeschlossene
+            Projekte vor. </para>
           </listitem>
         </varlistentry>
 
@@ -133,6 +239,14 @@
             Configuration” below), this descriptor can produce a
             self-contained, executable jar for your project, even if the
             project has dependencies.</para>
+
+            <para>Der jar-with-dependencies Deskriptor erstellt ein JAR
+            welches neben den Inhalten des Hauptprojekts auch alle entpackten
+            Inhalte der Archive der Abhängigkeiten zur Laufzeit. Zusammen mit
+            einem entsprechenden Main-Class Eintrag im Manifest (wird unter
+            "Plugin Konfiguration" weiter unten besprochen) kann ein solcher
+            Deskriptor ein in sich abgeschlossenes ausführbares JAR Ihres
+            Projektes darstellen, auch wenn dieses Abhängigkeiten hat. </para>
           </listitem>
         </varlistentry>
 
@@ -148,6 +262,16 @@
             <filename>.svn</filename> directories we’re all used to seeing.
             Basically, the point of this descriptor is to create a project
             archive that, when unpacked, can be built using Maven.</para>
+
+            <para>Der projekt Deskriptor sichert schlicht die Struktur Ihres
+            Projektes wie dieses auf Ihrem Dateisystem und ebenfalls
+            wahrscheinlich, in Ihrem Quellcode Repository besteht. Natürlich
+            ist das Zielverzeichnis hierbei ausgenommen, genau wie auch
+            eventuelle Metadaten der Versions Kontroll Software wie z.B. CVS
+            und .svn Verzeichnisse an welche wir uns alle gewöhnt haben. Der
+            Sinn dieses Deskriptors ist lediglich ein Projekt Archiv zu
+            erstellen, welches nach dem entpacken erlaubt, Maven darauf
+            auszuführen.</para>
           </listitem>
         </varlistentry>
 
@@ -166,13 +290,24 @@
             <filename>src</filename> directory, it has the potential to leave
             out non-standard directories and files that are nonetheless
             critical to some builds.</para>
+
+            <para>Der src Deskriptor erzeugt ein Archiv Ihrer Projekt Quellen
+            sowie pom.xml Dateien, zusammen mit allen notwendigen LIZENZ,
+            README/LIESMICH und HINWEIS-Dateien welche sich im
+            Wurzelverzeichnis befinden. Dieser Vorläufer des project
+            Deskriptors erzeugt ein Archiv, welches in den meisten Fällen von
+            Maven verarbeitet werden kann. Jedoch, aufgrund der Annahme das
+            sich alle Quellen und aderweitige Resourcen im Standarverzeichnis
+            /src befinden, besteht die Gefahr, dass alle nicht im Standard
+            liegenden Verzeichnisse und mit diesen Dateien welche für den
+            Build entscheidend sein mögen verlohren gehen. </para>
           </listitem>
         </varlistentry>
       </variablelist>
     </section>
 
     <section id="assemblies-sect-building">
-      <title>Building an Assembly</title>
+      <title>Erstellen eines Assembly [hier]</title>
 
       <para>The Assembly plugin can be executed in two ways: you can invoke it
       directly from the command line, or you can configure it as part of your
@@ -185,6 +320,18 @@
       project is installed or deployed into Maven’s repositories, so they are
       always available to your users.</para>
 
+      <para>Das Assembly Plugin kann auf zweierlei Wege aufgerufen werden: sie
+      können es direkt von der Befehlszeile aufrufen, oder Sie können es als
+      Teil Ihres Build Prozesses asntossen, indem Sie es an eine Phase des
+      Build Lebenszyklus binden. Der direkte Aufruf hat seine Berechtigung,
+      insbesondere für Einzelzusammenstellungen welche nicht Teil Ihrer Haupt
+      Ergebnisse sind. In den meisten Fällen werden Sie Ihre Projektartefakten
+      als Teil des normalen Build Prozesses zusammenfassen. Diese Art des
+      Vorgehens hat den Vorteil, dass Ihre angepassten Artefakte
+      eingeschlossen und in den maven repositories abgelegt werden, unabhängig
+      davon wo und wann das Projekt installiert oder verteilt werden soll. Es
+      ist somit zu jeder Zeit für die Benuzter verfügbar. </para>
+
       <para>As an example of the direct invocation of the Assembly plugin,
       imagine that you wanted to ship off a copy of your project which people
       could build from source. Instead of just deploying the end-product of
@@ -192,6 +339,14 @@
       do this often, so it doesn’t make sense to add the configuration to your
       <sgmltag>POM</sgmltag>. Instead, you can use the following
       command:</para>
+
+      <para>Als Beispiel eines direkten Aufrufs des Assembly Plugins, stellen
+      Sie sich vor, Sie möchten jemandem eine Kopie Ihres Projektes senden, so
+      dass diese Person dieses von den Quellen erstellen kann. Anstatt nur das
+      Produkt Ihrer Arbeit zu liefern, wollen Sie auch die Quellen
+      einschliessen. Eine solcherlei Zusammenstellung wird sicher die Ausnahme
+      sein, weshalb es auch nicht sinnvoll ist dieses im POM zu definieren,
+      statt dessen können Sie den folgenden Aufruf absetzen: </para>
 
       <screen>$ <command>mvn -DdescriptorId=project assembly:single</command> 
 ...
@@ -214,13 +369,27 @@
       <acronym>JAR</acronym> is installed or deployed, your executable
       <acronym>JAR</acronym> goes along with it.</para>
 
+      <para>Stellen Sie sich vor, Sie wollen ein ausführbares JAR aus Ihrem
+      Projekt erstellen. Sollte Ihr Projekt vollständig eigenständig sein,
+      ohne weitere Abhängigkeiten, so kann dies erreicht werden, indem man auf
+      dem haut Projektartefakten die Konfiguration archive des JAR Plugin
+      aufruft. Es ist jedoch so, dass die meisten Projekte Abhängigkeiten
+      haben, und diese Abhängigkeiten müssen in ein ausführbares JAR
+      eingeschlossen werden. In einem solchen Fall werden Sie sicherstellen
+      wollen, dass bei jedem Erstellen des Haupt Artefakts, des Projekt JAR
+      auch dieses ausführbare JAR erstellt wird. </para>
+
       <para>Assuming the main class for the project is
       <classname>org.sonatype.mavenbook.App</classname>, the following
       <acronym>POM</acronym> configuration will create an executable
       <acronym>JAR</acronym>:</para>
 
+      <para>Unter der Annahme, dass die Hauptklasse des Projektes
+      org.sonatype.mavenbook.App ist, so wird die folgende Konfiguration des
+      POM ein ausführbares JAR erstellen: </para>
+
       <example>
-        <title>Assembly Descriptor for Executable JAR</title>
+        <title>Assembly Descriptor eines ausführbaren JAR</title>
 
         <programlisting language="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -286,12 +455,30 @@
       <acronym>JAR</acronym> plugin used for the default project package
       type.</para>
 
+      <para>Ich möchte Ihre Aufmerksamkeit auf zwei Gegebenheiten des POMs
+      lenken: Erstens, wir setzen den Konfigurationsabschnitt des Elements
+      descriptorRefs ein anstelle der descriptorID welche wir zuletzt benutzt
+      haben. Ein solches Vorgehen erlaubt mehrere Arten der Zusammenstellung
+      während des gleichen Laufs des Assembly Plugins zu erstellen, um dennoch
+      unseren Use Case mit geringen zusätzlichen Aufwand zu konfigurieren.
+      Zweitens setzt das Element archive innerhalb des Elements configuration
+      das Haupt-Klassen Attribut des Manifest des erstelltn JAR. Dieser
+      Abschnitt ist gewöhnlich bei Plugins welche ein JAR erstellen verfügbar,
+      so wie auch dem JAR Plugin welches zur Erstellung der standard Projekt
+      Paketierungs Typen zum Einsatz kommt. </para>
+
       <para>Now, you can produce the executable <acronym>JAR</acronym> simply
       by executing <command>mvn package</command>. Afterward, we’ll also get a
       directory listing for the target directory, just to verify that the
       executable <acronym>JAR</acronym> was generated. Finally, just to prove
       that we actually do have an executable <acronym>JAR</acronym>, we’ll try
       executing it:</para>
+
+      <para>Jetzt können Sie das ausführbare JAR erstellen, indem Sie mvn
+      package aufrufen. Danach werden zeigen wir Ihnen noch das Verzeichnis
+      auf, um nachzuweisen, dass ein ausführbares JAR erzeugt wurde.
+      Schliesslich werden wir das JAR versuchen auszuführen, als Beweis, dass
+      dies tatsächlich ein ausführbares JAR ist: </para>
 
       <screen>$ <command>mvn package</command>
 ... (output omitted) ...
@@ -319,10 +506,17 @@ Hello, World!</screen>
       new <acronym>JAR</acronym> actually is executable, and that executing
       the <acronym>JAR</acronym> produced the desired output of “Hello,
       World!”</para>
+
+      <para>Von der vorausgehenden Ausgabe können Sie ablesen, das der normale
+      Build Lauf nun einen weiteren Artefakten - das ausführbare JAR -
+      zusätzlich zu den bestehenden Artefakten erstellt. Der neue Artefakt
+      trägt einen klassifizierenden Bezeichner "jar-with-dependencies". Da das
+      JAR ausführbar sein soll, haben wir dieses versucht, und wir haben die
+      erwartete Ausgabe "Hello, World!" bekommen. </para>
     </section>
 
     <section id="assemblies-sect-as-depend">
-      <title>Assemblies as Dependencies</title>
+      <title>Assemblies als Abhängigkeit</title>
 
       <para>When you generate assemblies as part of your normal build process,
       those assembly archives will be attached to your main project’s
@@ -340,6 +534,24 @@ Hello, World!</screen>
       to circumvent the Maven requirement of one project, one artifact
       precisely because of this derivative quality.</para>
 
+      <para>Sollten Sie im Laufe des normalen build Prozesses
+      Zusammenstellungen generieren, werden diese Artefakte Ihren normalen
+      Projekt Artefakten zugefügt. Das bedeutet, diese werden in gleicher
+      Weise in das Repository installiert und freigegeben und sind fortan wie
+      diese aufzulösen. Jede Zusammenstellung bekommt die gelichen
+      Basiskoordinaten (<varname>groupId</varname>,
+      <varname>artifactId</varname>, und <varname>version</varname>) wie das
+      Projekt. Diese Artefakte sind jedoch Anhänge, was im Universum von maven
+      bedeutet, dass dies abgeleitete Werke sind welche auf den selben
+      Artefakten aufbauen aber eine andere Prägung haben als das
+      Hauptergebnis. Ein paar Beispiele: Quellzusammenstellungen enthalten die
+      rohen Daten welche ein Build benötigt, jar-with-dependencies enthalten
+      das Ergebnis eines Build laufes inklusive aller notwendigen
+      Abhängigkeiten. Anhänge zu Artefakten dürfen eine Haupeigenschaft von
+      Maven Projekten aushebeln, dass es genau einen Artefakt zu ienem Projekt
+      gibt. Das ist genau aus dem Grund möglich, da sie Anhänge zu einem
+      Projekt darstellen. </para>
+
       <para>Since assemblies are (normally) attached artifacts, each must have
       a classifier to distinguish it from the main artifact, in addition to
       the normal artifact coordinate. By default, the classifier is the same
@@ -347,6 +559,14 @@ Hello, World!</screen>
       assembly descriptors, as above, the assembly descriptor’s identifier is
       generally also the same as the identifier used in the
       <sgmltag>descriptorRef</sgmltag> for that type of assembly.</para>
+
+      <para>Da Zusammenstellungen (normalerweise) Anhänge zum Projekt sind,
+      muss jede zusätzlich zu den Koordinaten (Bezeichnern) eine Kennzeichnung
+      tragen um diese vom Haupartefakten zu unterscheiden.Standardmässig ist
+      diese Kennzeichnung die selbe wie die des Bezeichners des Deskriptors.
+      Beim Einsatz der eingebauten Zusammenstellungs Deskriptoren, wie im
+      Beispiel oben, wird die Kennzeichnung gewöhnlich mit dem Bezeichner
+      welcher im Feld descriptorRef benutzt wurde, gleichgesetzt. </para>
 
       <para>Once you’ve deployed an assembly alongside your main project
       artifact, how can you use that assembly as a dependency in another
@@ -366,10 +586,31 @@ Hello, World!</screen>
       coordinates of a project plus the classifier under which the assembly
       was installed or deployed. If the assembly is not a
       <acronym>JAR</acronym> archive, we also need to declare its type.</para>
+
+      <para>Nachdem Sie also eine Zusammenstellung neben einem Artefakten
+      verteilt haben, wie können Sie diese Zusammenstellung nun als
+      Abhängigkeit in ein anderes Projekt einbinden? Die Antwort ist einfach:
+      Erinnern Sie sich an die Abschnitte <xref
+      linkend="simple-project-sect-maven-coordinates" /> sowie <xref
+      linkend="pom-relationships-sect-more-coordinates" /> bezüglich der
+      Abhängigkeiten von Projekten in Maven; Projekte definieren
+      Abhängigkeiten zu anderen Projekten durch eine Kombination von vier
+      Koordinaten: <varname>groupId</varname>, <varname>artifactId</varname>,
+      <varname>version</varname>, und <varname>packaging</varname>. Im
+      Abschnitt <xref linkend="profiles-sect-platform-classifier" />, wird
+      gezeigt wie mehrere Ausprägungen eines Artefakts bestehen und wie man
+      die Koordinate classifier benutzt, um um mittels einem Wert von entweder
+      win oder linux die richtige plattformspezifische Form auswählt.
+      Zusamenstellungen können also wie normale Abhängigkeiten benutzt werden,
+      wobei die normalen Koordinaten zum Einsatz kommen zuzüglich dem
+      notwendingen Element classifier, unter welchem der Artefakt installiert
+      oder verteilt wurde. Sollte die Zusammenstellung nicht als JAR
+      vorliegen, so muss zusätzlich der Typ deklariert werden. </para>
     </section>
 
     <section id="assemblies-sect-assembling-via-depend">
-      <title>Assembling Assemblies via Assembly Dependencies</title>
+      <title>Zusammenstellen von Assemblies mittels Assembly
+      Abhängigkeiten</title>
 
       <para>How's that for a confusing section title? Let's try to set up a
       scenario which would explain the idea of assembling assemblies. Imagine
@@ -391,8 +632,28 @@ Hello, World!</screen>
       whose <sgmltag>pluginManagement</sgmltag> element is shown in <xref
       linkend="ex-top-pom-assembly" />.</para>
 
+      <para>Ist das nicht ein verwirrender Titel? Lassen Sie uns ein Szenario
+      entwerfen welches den Gedanken von zusammengestellten Zusammenstellungen
+      verdeutlicht. Vielleicht möchten Sie ein Archiv erstellen, welches eine
+      Anzahl Zusammenstellungen enthält. Gehen Sie davon aus, dass Sie über
+      eine multi-modulares Projekt verfügen, und nun eine Zusammenstellung
+      verteilen möchten, welche aus einer Anzahl voneinander in Beziehung
+      stehender Projekt Zusammenstellungen besteht. In diesem Abschnitt
+      erstellen wir eine Bündelung von "build-baren" Projekt Verzeichnissen
+      für eine Anzahl Projekte welche gewöhnlicherweise zusammen benutzt
+      werden. Der Einfachheit halber werden wir die zwei oben ausgeführten
+      eingebaut vorhandenen Deskriptoren project und jar-with-dependecies. In
+      diesem speziellen Beispiel gehen wir davon aus, dass jedes Projekt zum
+      normalen JAR Artefakten ebenfalls einen Artefakt einer Zusammenstellung
+      project erstellt. Nehmen Sie darüber hinaus an, dass jedes Projekt des
+      multi modularen Build Lauf das Goal single an die Phase packaging bindet
+      und das Element project descriptorRef benutzt. Jedes Projekt eines multi
+      modularen Builds erbt diese Konfiguration on einem übergeordneten POM
+      dessen Element pluginManagement in <xref
+      linkend="ex-top-pom-assembly" /> ausgeführt ist. </para>
+
       <example id="ex-top-pom-assembly">
-        <title>Configuring the project assembly in top-level POM</title>
+        <title>Konfiguration des Projekt Asseembly im top-level POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -429,9 +690,14 @@ Hello, World!</screen>
       minimal plugin declaration in its build section shown in <xref
       linkend="ex-activating-assembly" />.</para>
 
+      <para>Jedes untergeordnete Projekt POM referenziert die Plugin
+      Konfiguration aus <xref linkend="ex-top-pom-assembly" /> in dem es eine
+      minimale Plugin Deklaration im Build-Abschnitt des POMs aufnimmt. Dies
+      is in <xref linkend="ex-activating-assembly" /> ausgeführt. </para>
+
       <example id="ex-activating-assembly">
-        <title>Activating the Assembly Plugin Configuration in Child
-        Projects</title>
+        <title>Aktivierung der Assembly Plugin Konfiguration im
+        Untermodul</title>
 
         <programlisting language="xml">&lt;build&gt;
   &lt;plugins&gt;
@@ -446,6 +712,12 @@ Hello, World!</screen>
       <para>To produce the set of project assemblies, run <command>mvn
       install</command> from the top-level directory. You should see Maven
       installing artifacts with classifiers in your local repository.</para>
+
+      <para>Um die entsprechenden Projekt Zusammenstellungen zu erstellen,
+      rufen Sie <command>mvn install</command> aus dem übergeordneten
+      Verzeichnis auf. Sie sollten beobachten können wie Maven die
+      entsprechenden Artefakte mit Bezeichnern in Ihr lokales Repository
+      installiert. </para>
 
       <screen>$ <command>mvn install</command>
 ...
@@ -476,8 +748,22 @@ Installing ~/mvn-examples-1.0/assemblies/as-dependencies/project-parent/\
       <acronym>POM</acronym> for the bundling project would resemble the XML
       document listed in <xref linkend="ex-bundling-pom" />.</para>
 
+      <para>Beim Aufruf von <command>mvn install</command> wird Maven jeweils
+      den Projektartefakten sowie die entsprechende Zusammenstellung in Ihr
+      lokales Repository insatllieren. Alle diese Artefakte sind fortan für
+      weitere Projekte mittels der Koordinaten referenzierbar. Sollte Ihr Ziel
+      nun sein, eine Zusammenstellung bestehend aus den Zusammenstellungen
+      mehrerer Projekte zu erstellen, so erreichen Sie dies indem Sie ein
+      weiteres Projekt erstellen, welches die entsprechenden Projekt
+      Zusammenstellungen als Abhängigkeiten definiert. Dieses Bündel von
+      Projekten (mit dem treffenden Namen bundle-project (engl.
+      Bündelprojekt)) trägt verantwortung für die Erstellung der
+      Zusammenstellung. Das entsprechende POM des Projektes ist im
+      XML-Dokument von <xref linkend="ex-bundling-pom" /> wiedergegeben.
+      </para>
+
       <example id="ex-bundling-pom">
-        <title>POM for the Assembly Bundling Project</title>
+        <title>POM eines Assembly Bündelungs Projektes</title>
 
         <programlisting language="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -554,6 +840,22 @@ Installing ~/mvn-examples-1.0/assemblies/as-dependencies/project-parent/\
       <varname>first-project</varname> and <varname>second-project</varname>
       side-by-side.</para>
 
+      <para>Dieses "Bündelungs"-Projekt POM referenziert die zwei
+      Zusammenstellungen von den Projekten first-project und second-project.
+      Statt der Hauptartefakte jedes Projektes referenziert das POM die
+      Koordinaten mit Bezeichner und einem Typ zip. Dies fordert Maven dazu
+      auf, das ZIP Archiv aufzulösen, welches von der entsprechenden
+      Zusammenstellung erstellt wurde. Beachten Sie, dass das Bündelprojekt
+      eine Zusammenstellung der Art jar-with-dependencies erstellt. </para>
+
+      <para>jar-with-dependencies erzeugt kein besonders elegantes Archiv, es
+      erzeugt lediglich ein einziges JAR mit dem entpackten Inhalt aller
+      Abhängigkeiten, dieser Typ weist Maven also an, alle Abhängigkeiten
+      zusammenzutragen, alle JARs zu entpacken um diese anschliessend alle in
+      ein JAR, mit den Projektartefakten zusammenzupacken. In diesem Beispiel
+      erzeugt dies ein einziges JAR mit den Inhalten von den Projekten
+      first-project und second-project Seite an Seite. </para>
+
       <para>This example illustrates how the basic capabilities of the Maven
       Assembly plugin can be combined without the need for a custom assembly
       descriptor. It achieves the purpose of creating a single archive that
@@ -563,6 +865,16 @@ Installing ~/mvn-examples-1.0/assemblies/as-dependencies/project-parent/\
       <varname>Main-Class</varname> manifest attribute. To build the bundle,
       we just build the <varname>project-bundle</varname> project
       normally:</para>
+
+      <para>Diese Beispiel zeigt auf, wie man die grundlegenden Möglichkeiten
+      des Maven Assembly Plugin verbinden kann, um Artefakte zu erzeugen ohne
+      einen speziell angepassten Assembly Deskriptor zu benötigen. Wir
+      erreichen unser Ziel durch die Erstellung eines einzigen Archives
+      welches die verschiedenen Projektverzeichnisse Seite an Seite enthält.
+      In diesem Fall wird jar-with-dependencies nur als Speicherformat
+      benutzt, weshalb wir auch kein Attribut Main-Class bestimmen. Um das
+      Bündel zu erstellen starten wir eine gewöhnlichen Build Lauf des
+      Projektes:</para>
 
       <screen>$ <command>mvn package</command>
 ...
@@ -575,6 +887,10 @@ Installing ~/mvn-examples-1.0/assemblies/as-dependencies/project-parent/\
       <para>To verify that the project-bundle assembly contains the unpacked
       contents of the assembly dependencies, run <command>jar
       tf</command>:</para>
+
+      <para>Um zu überprüfen, dass die Projekt Bündel Zusammenstellung
+      tatsächlich die entpackten Inhalte der abhängigen Zusammenstellungen
+      enthält können Sie jar tf aufrufen:</para>
 
       <screen>$ <command>jar tf \
   target/project-bundle-1.0-SNAPSHOT-jar-with-dependencies.jar</command>
@@ -591,19 +907,31 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       You've assembled assemblies from two projects into an assembly using a
       bundling project which has a dependency on each of the
       assemblies.</para>
+
+      <para>Jetzt da Sie diesen Abschnitt gelesen haben, sollte auch der Titel
+      einen besseren Sinn ergeben. Sie haben eine Zusammenstellung zweier
+      Projektspezifischer Zusammenstellungen erstellt, indem Sie ein Projekt
+      eingefügt haben welches beide Artefakte als Abhängigkeit definiert.
+      </para>
     </section>
   </section>
 
   <section id="assemblies-sect-overview-descriptor">
-    <title>Overview of the Assembly Descriptor</title>
+    <title>Übersicht eines Assembly Descriptors</title>
 
     <para>When the standard assembly descriptors introduced in <xref
     linkend="assemblies-sect-basics" /> are not adequate, you will need to
     define your own assembly descriptor. The assembly descriptor is an XML
     document which defines the structure and contents of an assembly.</para>
 
+    <para>Sobald die standard Assembly Deskriptoren wie diese in<xref
+    linkend="assemblies-sect-basics" /> eingeführt wurden nicht ausreichen,
+    werden Sie Ihren eingenen Deskriptor erstellen. Ein Assembly Deskriptor
+    ist ein XML Dokument, welches die Struktur und den Inhalt einer
+    Zusammenstellung festlegt. </para>
+
     <figure>
-      <title>Assembly Descriptor Picture</title>
+      <title>Schematische Abbildung eines Assembly Descriptor</title>
 
       <mediaobject>
         <imageobject>
@@ -618,9 +946,16 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
     for specifying custom file processor classes to help manage the
     assembly-production process.</para>
 
+    <para>Die Konfiguration eines Assembly Deskriptors ist in fünf Abschnitten
+    gegliedert, mit zwei optionalen: eines um standard
+    Zusammenstellungsfragmente definieren, sogenannte Komponenten Deskriptoren
+    sowie einem weiteren Abschnitt um spezifische Dateiverarbeitungsklassen zu
+    benennen, welche benötigt werden um eine Zusammenstellung zu erstellen. Im
+    folgenden eine Beschreibung der fünf Hauptabschnitte:</para>
+
     <variablelist>
       <varlistentry>
-        <term>Base Configuration</term>
+        <term>Base Configuration / Basiskonfiguration</term>
 
         <listitem>
           <para>This section contains the information required by all
@@ -629,11 +964,19 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           all archive entries. For the assembly descriptor to be valid, you
           must at least specify the assembly id, at least one format, and at
           least one of the other sections shown above.</para>
+
+          <para>Dieser Abschnitt enthält Informationen welche von allen
+          Zusammenstellungen benötigt werden, sowie einige zusätzliche
+          Konfigurationselemente welche optional gebraucht werden und sich auf
+          das Format des Gesamtarchivs beziehen. Um einen vollständigen
+          Assembly Deskriptor zu erstellen ist es notwendig zumindest die
+          Assembly ID, eine Formatangabe sowie eine der nachfolgenden
+          Abschitte anzugeben. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>File Information</term>
+        <term>File Information / Datei Informationen</term>
 
         <listitem>
           <para>The configurations in this segment of the assembly descriptor
@@ -643,11 +986,20 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           <sgmltag>files</sgmltag> and <sgmltag>fileSets</sgmltag> to control
           the permissions of files in an assembly and to include or exclude
           files from an assembly.</para>
+
+          <para>Die Konfigurationen in diesem Abschnitt beziehen sich auf
+          speziefische Dateien des Dateisystems welche in den
+          Projektverzeichnissen liegen. Dieser Abschnitt hat zwei wichtige
+          Unterabschnitte files (Dateien) und fileSets (Dateigruppierungen).
+          Sie benutzen diese beiden Abschnitte um Datein und Gruppierungen von
+          Dateien Zugriffsberechtigungen zuzuweisen und um diese in eine
+          zusammenstellung ein- oder auszuschliessen. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>Dependency Information</term>
+        <term>Dependency Information / Informationen bezüglich
+        Abhängigkeiten</term>
 
         <listitem>
           <para>Almost all projects of any size depend on other projects. When
@@ -659,11 +1011,23 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           new file names. This section also allows you to control the
           permissions of dependencies in the assembly, and which dependencies
           are included in an assembly.</para>
+
+          <para>Beinahe alle projekte jeglicher Grösse sind von anderen
+          Projekten abhängig. Bei der Erstellung von Archieven für die
+          Verteilung werden gewöhnlich alle Abhängigkeiten in die
+          Zusammenstellung eingeschlossen. Dieser Abschnitt definiert, in
+          welcher Weise Abhängigkeiten in einem resultierenden Archiv
+          eingeschlossen werden. Dieser Abschnitt erlaubt es zu definieren, ob
+          Abhängigkeiten entpackt werden, diese direkt in das lib-Verzeichnis
+          eingeschlossen werden oder gar auf einen anderen Namen abgebildet
+          werden sollen. Darüberhinaus erlaubt Ihnen dieser Abschnitt die
+          Zugriffsrechte auf die Abhängigkeiten zu setzen, sowie festzlegen,
+          welche Abhängigkeiten überhaupt eingeschlossen werden. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>Repository Information</term>
+        <term>Repository Information / Repository Informationen</term>
 
         <listitem>
           <para>At times, it’s useful to isolate the sum total of all
@@ -675,11 +1039,21 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           with various configuration options. The Assembly plugin does not
           have the ability to include plugin artifacts in these repositories
           yet.</para>
+
+          <para>Manchmal ist es nützlich, kann man die Gesamtheit aller
+          nowendigen Artefakte, welche benötigt werden ein Projekt zu
+          erstellen, eingrenzen. Diese Artefakte können Abhängigkeiten,
+          POM-Dateien von abhängigen Artefakten, oder auch übergeordnete
+          POM-Dateien sein. In diesem Abschnitt ist es möglich ein oder mehr
+          Repository Systeme in Ihre Zusammenstellung aufzunehmen, inklusive
+          mehrer möglichen Konfigurationen. Zu diesem Zeitpunkt ist es nicht
+          möglich, Plugin-Artefakte in diesen Repositorien aufzunehmen.
+          </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>Module Information</term>
+        <term>Module Information / Informationen zu den Modulen</term>
 
         <listitem>
           <para>This section of the assembly descriptor allows you to take
@@ -691,21 +1065,37 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           (via the <sgmltag>sources</sgmltag> section) or as a series of
           <sgmltag>dependencySets</sgmltag> (via the
           <sgmltag>binaries</sgmltag> section).</para>
+
+          <para>Dieser Abschnitt erlaubt Ihnen vererbliche Strukturen bei der
+          definition von Zusammenstellungen auszunutzen, um entsprechende
+          Quell-Dateien, Artefakte und Abhängigkeiten des übergeordneten
+          Moduls einzuschliessen. Dieser Abschnitt ist der komplexeste des
+          gesamten Assembly Deskriptors, denn dieser Abschnitt ermöglicht
+          Ihnenn auf zweierlei Weise mit Modulen und Untermodulen zu arbeiten:
+          zum einen als Anzahl von fileSets (mittels den Abschnitten bezüglich
+          Quellen) oder in Bezug auf dependencySets (mittels den Abschnitten
+          bezüglich der Binaries). </para>
         </listitem>
       </varlistentry>
     </variablelist>
   </section>
 
   <section id="assemblies-sect-descriptor">
-    <title>The Assembly Descriptor</title>
+    <title>Der Assembly Descriptor</title>
 
     <para>This section is a tour of the assembly descriptor which contains
     some guidelines for developing a custom assembly descriptor. The Assembly
     plugin is one of the largest plugins in the Maven ensemble, and one of the
     most flexible.</para>
 
+    <para>Dieser Abschnitt ist eine kurze Übersicht über den Assembly
+    Deskriptor, wir werden versuchen Ihnen ein paar Tips und Leitgaben zur
+    Erstellung von benutzerdefinierten Assembly Deskriptoren zu geben. Das
+    Assembly Plugin ist das grösste Plugin der Maven Familie, und auch eines
+    der flexibelsten. </para>
+
     <section id="assemblies-sect-prop-refs">
-      <title>Property References in Assembly Descriptors</title>
+      <title>Property Referenzen in Assembly Descriptoren</title>
 
       <para>Any property discussed in <xref
       linkend="resource-filtering-sect-properties" /> can be referenced in an
@@ -717,6 +1107,16 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       <acronym>POM</acronym> element values, system properties, user-defined
       properties, and operating-system environment variables.</para>
 
+      <para>Jedes im Kapitel <xref
+      linkend="resource-filtering-sect-properties" /> angegebene Property kann
+      innerhalb eines Assembly Deskriptors referenziert werden. vor jeglicher
+      Assembly Deskriptor von Maven verarbeitet wird, wird dieser mit den
+      Informationen des POM und der aktuellen Build-Umgebung agbeglichen. Alle
+      innerhalb von POM-Dateien zulässigen Properties sind auch in Assembly
+      Deskriptoren gültig, einschliesslich POM Properties, Werte von POM
+      Elementen, System Properties, benutzerdefinierte Properties wie auch
+      Betreibssystemvariablen. </para>
+
       <para>The only exceptions to this interpolation step are elements in
       various sections of the descriptor named
       <sgmltag>outputDirectory</sgmltag>,
@@ -726,11 +1126,18 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       to be applied when resolving expressions in these values, on a per-item
       basis.</para>
 
+      <para>Es gibt eine einzige Ausnahme bezüglich diesem Auswertungsschritt:
+      die Elemente der verschiedenen Unterabschnitte unterhalb von
+      outputDirector, outputDirectoryMapping and outputFileNameMapping. Diese
+      Elemente werden von der Verarbeitung ausgeschlossen, um zu ermöglichen,
+      dass Artefakt- oder Modul-spezifische Änderungen bei der Auflösung der
+      Elemente eingebracht werden können.</para>
+
       <!--This last paragraph is not clear.-->
     </section>
 
     <section id="assemblies-sect-required">
-      <title>Required Assembly Information</title>
+      <title>Notwendige Informationen für Zusammenstellungen</title>
 
       <para>There are two essential pieces of information that are required
       for every assembly: the <sgmltag>id</sgmltag>, and the list of archive
@@ -745,8 +1152,21 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       All assembly descriptors must contain an <sgmltag>id</sgmltag> and at
       least one <sgmltag>format</sgmltag>:</para>
 
+      <para>Es gibt zwei essentielle einträge, welche für jegliche
+      Zusammenstellung benötigt werden: die ID und eine Liste der
+      Archivformate welcher erstellt werden sollen. Tatsächlich braucht es
+      mindestens noch einen weiteren Eintrag des Deskriptors - da die meisten
+      Archiv-Prozessoren es nicht vertragen sollten diese nicht mindestens
+      eine Datei bekommen - aber ohne ID und Formatangabe gibt es in jedem
+      Fall kein zu erzeugendes Archiv. Die ID findet nicht nur im Namen des
+      Archivs Verwendung, sondern auch als Teil des Artefakt Bezeichners
+      innerhalb des Maven Repositories. Der Format-Eintrag bestimmt die
+      Instanz des Archivierenden Prozessors welche das schliessendliche Archiv
+      der Zusammenstellung erzeugt. Alle Assembly Deskriptoren müssen daher
+      mindestens eine ID sowie einen Formateintrag enthalten:</para>
+
       <example id="ex-required-assembly">
-        <title>Required Assembly Descriptor Elements</title>
+        <title>Notwendige Elemente des Assembly Descriptors</title>
 
         <programlisting language="xml">&lt;assembly&gt;
   &lt;id&gt;bundle&lt;/id&gt; 
@@ -770,6 +1190,21 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       format. Custom formats are discussed in <xref
       linkend="assemblies-sect-componentDescriptors" />. The Assembly plugin
       supports several archive formats natively, including:</para>
+
+      <para>Der Eintrag assembly id kann eine beliebige Zeichenkette welche
+      keine Leerschläge enthält sein, normalerweise werden als
+      Worttrennzeichen Bindestriche eingesetzt. Sollten sie zum Beispiel eine
+      Zusammenstellung einer besonderen einmaligen Paketstruktur erstellen, so
+      könnten Sie auf eine id besondere-einmalige-Paketstruktur zurückgreifen.
+      Verschiedene Archivformate einer Zusammenstellung werden gleichzeitig in
+      einem einzigen Assembly Deskriptor unterstützt, dies erlaubt es Ihnen
+      die bekannten Formate .zip, .tar.gz sowie .tar.bz2 der Archive zur
+      Verteilung einfach zu ertellen. Sollten Sie das von ihnen erwünschte
+      Archivformat nicht finden, so können Sie ein eigenes foramt definieren.
+      Benutzerdefinierte Formate werden im Abschnitt <xref
+      linkend="assemblies-sect-componentDescriptors" /> behandelt. Das
+      Assembly Plugin bietet direkte Untertützung für die folgenden Formate:
+      </para>
 
       <itemizedlist>
         <listitem>
@@ -827,6 +1262,12 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       linkend="ex-required-assembly" /> will create an assembly artifact of
       type <varname>zip</varname> with a classifier of
       <varname>bundle</varname>.</para>
+
+      <para>Die Elemente id und format sind auch deshalb so wichtig, da diese
+      einen Bestandteil der koordinaten der Zusammenstellung abgeben. So
+      ergibt sich aus dem Beispiel <xref linkend="ex-required-assembly" />
+      eine Zusammenstellung vom Typ zip mit der Artefakt Bezeichnung
+      bundle.</para>
     </section>
   </section>
 
@@ -849,8 +1290,20 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
     easier to understand <sgmltag>repositories</sgmltag> and
     <sgmltag>moduleSets</sgmltag>.</para>
 
+    <para>Theoretisch reichen die Elemente id und format für einen zulässigen
+    Assembly Deskriptor; es ist jedoch so, dass viele Archiv Prozessoren
+    scheitern, sollte nicht mindesten eine Datei vorhanden sein welche dem
+    resultierenden Archiv zugefügt wird. Die Aufgabe zu definieren welche
+    Dateien tatsächlich einem Archiv zugefügt werden, fällt den fünf
+    Hauptabschnitten des Assembly Deskriptors zu: files, fileSets, dependency
+    Sets, repositories und moduleSets. Im diese Abschnitte rasch einzuführen,
+    fangen wir mit dem elementarsten Element an: files. Wir werden
+    fortschreiten mit den zwei am häufigsten benutzten Abschnitten - fileSets
+    und dependencySets. Sobald Sie diese verstanden haben ist es ein Leichtes
+    repositories und moduleSets einzuführen. </para>
+
     <section id="assemblies-sect-files">
-      <title><sgmltag>Files</sgmltag> Section</title>
+      <title><sgmltag>Element Files</sgmltag></title>
 
       <para>The <sgmltag>files</sgmltag> section is the simplest part of the
       assembly descriptor, it is designed for files that have a definite
@@ -859,9 +1312,16 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       your assembly, exactly what they are named, and where they will reside
       in the archive.</para>
 
+      <para>Der Abschnitt files ist der einfachste Teil eines Assembly
+      Deskriptors, er ist auf Dateien ausgelegt, welche einen relativ zum
+      Projektverzeichnis bestimmte Lage besitzen. Der Einsatz dieses Elements
+      gibt Ihnen die volle Kontrolle über genau die Dateien welche Sie in Ihre
+      Zusammenstellung einbinden möchten, lässt Sie genau bestimmen wie diese
+      benannt werden sollen und wo im Archiv diese abgelegt werden. </para>
+
       <example id="ex-assembly-files">
-        <title>Including a <acronym>JAR</acronym> file in an Assembly using
-        <sgmltag>files</sgmltag></title>
+        <title>Einschlissen einer <acronym>JAR</acronym> Datein in ein
+        Assembly mittels dem Element <sgmltag>files</sgmltag></title>
 
         <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -891,6 +1351,19 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       url="http://en.wikipedia.org/wiki/File_system_permissions#Octal_notation_and_additional_permissions">four-digit
       Octal notation</ulink>.</para>
 
+      <para>Unter der Annahme, dass Sie ein Projekt namens my-app in Version
+      1.0 erstellen, so würde in <xref linkend="ex-assembly-files" /> Ihr
+      Projekt JAR im Verzeichnis lib/ abgelegt, die Version aus dem Dateinamen
+      herausgerennt so dass die resultierende Datei nur noch my-app.jar
+      heisst. Das JAR würde für alle lesbar, aber nur für Eigner
+      schreibberechtigt werden (das ist die Bedeutung des Elements mode 0644
+      auf Dateien angewandt, in Unix vierstelliger Benutzerrechtsnotation).
+      Weitere Informationen bezüglich des Formats der Werte des Elements
+      fileMode finden Sie im Wikipedia-Eintrag bezüglich der vierstelligen
+      Benutzerrechtsnotation (<ulink
+      url="http://en.wikipedia.org/wiki/File_system_permissions#Octal_notation_and_additional_permissions">four-digit
+      Octal notation</ulink>). </para>
+
       <para>You could build a very complex assembly using file entries, if you
       knew the full list of files to be included. Even if you didn’t know the
       full list before the build started, you could probably use a custom
@@ -903,10 +1376,24 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       using <sgmltag>fileSets</sgmltag>. The remaining four file-inclusion
       sections are designed to help you include entire sets of files that
       match a particular criteria.</para>
+
+      <para>Sie können, unter der Voraussetzung dass Ihnen die genauen Dateien
+      bekannt sind, eine sehr komplexe Zusammenstellung mittels Elementen file
+      vornehmen. Sie könnten die sogar soweit ausbauen, dass Sie mit einem
+      benutzerdefinierten Plugin die Liste der Dateien erstellen und dann den
+      Assembly Deskriptor generieren könnten indem Sie Elemente wie oben
+      ausgeführt einfügen. Obwohl die einzelne Auflistung jeder Datei, deren
+      Namen, Lokation und Berechtigungen innerhalb einer Zusammenstellung
+      Ihnen genaueste Kontrolle gibt, so ist dies ein sehr mühsames Vorgehen.
+      Im Allgemeinen werden Sie auf Gruppierungen von Dateien und
+      Abhängigkeiten arbeiten unter Anwendung von fileSets. Die weiteren vier
+      Abschnitte zur Auswahl von Dateien sind darauf ausgelegt ganze
+      Dateigruppen welche einem bestimmten Kriteium entsprechen zu bearbeiten.
+      </para>
     </section>
 
     <section id="assemblies-sect-filesets">
-      <title><sgmltag>FileSets</sgmltag> Section</title>
+      <title><sgmltag>Element FileSets</sgmltag></title>
 
       <para>Similar to the <sgmltag>files</sgmltag> section,
       <sgmltag>fileSets</sgmltag> are intended for files that have a definite
@@ -916,6 +1403,15 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       don’t match), and the general directory structure in which they are
       located. The simplest <sgmltag>fileSet</sgmltag> just specifies the
       directory where the files are located:</para>
+
+      <para>Ähnlich des Abschnitts über die Datei Auswahl (files) befassen
+      sich auch fileSet mit Datein die einen bestimmten relativen Ort zum
+      Projektverzeichnis besitzen. Jedoch, im Gegensatz zu files beschreiben
+      fileSets Gruppierungen von Dateien definiert durch Datei-und Pfadmuster
+      welchen diese entsprechen (oder eben nicht entsprechen!) und der
+      allgemeinen Verzeichnisstruktur in welcher diese sich befinden. Das
+      einfachste fileSet definiert lediglich das Verzeichnis in welchem sich
+      die Dateien befinden. </para>
 
       <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -931,6 +1427,11 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       <filename>src/main/java</filename> directory from our project. It takes
       advantage of many default settings in the section, so let’s discuss
       those briefly.</para>
+
+      <para>Das oben abgebildete fileSet schliesst lediglich den Inhalt des
+      Verzeichnisses <filename>src/main/java</filename> unseres Projektes ein.
+      Es nutzt hierbei viele der bestehenden Standardeinstellungen, welche wir
+      im folgenden genauer ansehen wollen. </para>
 
       <para>First, you’ll notice that we haven’t told the file set where
       within the assembly matching files should be located. By default, the
@@ -950,13 +1451,34 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       linkend="assemblies-sect-default-excludes" /> provides a detailed list
       of the default exclusion patterns.</para>
 
+      <para>Zuallererst fällt auf, dass wir im fileSet gar nicht angeben, wo
+      innerhalb der Zusammenstellung die entsprechenden Dateien abgelegt
+      werden sollen. Standardmässig ist das Zielverzeichnis (angegeben im
+      Element outputDirectory) dasselbe wie das Quellverzeichnis (in unserem
+      Fall src/main/java). Zusätzlich haben wir keinerlei Ein- oder
+      Ausschlusskriterien in Form von Dateimustern definiert. Werden diese
+      nicht gegeben, so wird davon ausgegangen, dass Sie alle Dateien des
+      Quellverzeichnisses einschliessen mit einigen wichtigen Ausnahmen. Die
+      Ausnahmen betreffen zumeist Meta Daten von Source Controll Systemen und
+      deren Verzeichnisse, diese werden durch die Einstellung
+      useDefaultExcludes gesetzt, welche standarmässig auf true gesetzt ist.
+      Solange aktiviert wird die Einstellung useDefaultExclude Verzeichnisse
+      wie .svn/ und CVS/ aus einer Zielzusammenstellung heraushalten. Der
+      Abschnitt <xref linkend="assemblies-sect-default-excludes" /> gibt eine
+      detailierte Liste der standard Auschlussmuster. </para>
+
       <para>If we want more control over this file set, we can specify it more
       explicitly. <xref linkend="ex-explicit-fileSet" /> shows a
       <sgmltag>fileSet</sgmltag> element with all of the default elements
       specified.</para>
 
+      <para>Sollten wie über das fileSet mehr Kontrolle ausüben wollen, so
+      können wir dies. <xref linkend="ex-explicit-fileSet" /> gibt ein element
+      fileSet wieder bei welchem alle Standarelemente gesetzt sind. </para>
+
       <example id="ex-explicit-fileSet">
-        <title>Including Files with <sgmltag>fileSet</sgmltag></title>
+        <title>Einschliessen von Dateien mittles dem Element
+        <sgmltag>fileSet</sgmltag></title>
 
         <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -991,6 +1513,21 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       directories are executable in addition to being readable. Like files,
       only the owner can write to directories in this set.</para>
 
+      <para>Das Element includes besteht aus einer Liste von Elementen include
+      welche Pfadmuster definieren. Diese Muster können auch Joker beinhalten
+      (ant-Stil), wobei '**' bedeutet passt zu einem oder mehr Verzeichnissen,
+      '*' passt auf Teil eines Dateinamens und '?' welches ein einziges
+      Zeichen ersetzt.<xref linkend="ex-explicit-fileSet" /> benutzt hierbei
+      ein Element fileMode welches definiert, dass die resultierenden Einträge
+      von allen gelesen, aber nur Eigner schreibrechte besitzen. Da das
+      Element fileSet auch Verzeichnisse einschliesst, besteht ebenfalls die
+      Möglichkeit das Element directoryMode zu setzen, welches dem Element
+      fileMode sehr ähnliche Funtionalitäten aufweist. Da die Berechtigung ein
+      Verzeichnis "auszuführen" auf das Auflisten des Inhaltes abgebildet ist,
+      stellen wir sicher, dass Verzeichnisse nebst "lesbar" auch "ausführbar"
+      sind. Wie auch schon bei Dateien werden nur Eigner schreibrechte
+      besitzen. </para>
+
       <para>The <sgmltag>fileSet</sgmltag> entry offers some other options as
       well. First, it allows for an <sgmltag>excludes</sgmltag> section with a
       form identical to the <sgmltag>includes</sgmltag> section. These
@@ -1007,6 +1544,22 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       your files using the <sgmltag>lineEnding</sgmltag> element; valid values
       for <sgmltag>lineEnding</sgmltag> are:</para>
 
+      <para>Das Element fileSet bietet aber auch noch weitere Möglichkeiten.
+      Zunächst einmal erlaubt es den Einschluss eines Elements excludes in
+      gleicher Weise wie bereits das Element includes definiert wurde. Diese
+      Auschlusskriterien erlauben es Ihnen bestimmte Dateien aus dem
+      resultierenden fileSet auszschliessen. Einschlusskriterien übersteuern
+      hierei Auschlusskriterien. Zusätzlich können Sie die Einstellung
+      filtering auf true setzen, sollten Sie bestimmte Ausdrücke bei den
+      eingeschlossenen Dateien durch Property-Werte ersetzen wollen. Ausdrücke
+      können entweder durch <varname>\${</varname> und <varname>}</varname>
+      (normale Maven Ausdrücke wie z.B.
+      <varname>\${project.groupId}</varname>) oder durch <varname>@</varname>
+      and <varname>@</varname> (normale Ant Ausdrücke wie z.B.
+      <varname>@project.groupId@</varname>) eingeleitet werden. Sie können das
+      Zeilenabschlusszeichen Ihrer Dateien durch das Element lineEnding
+      bestimmen. Erlaubte Zeilenabschlusselemente sind: </para>
+
       <variablelist>
         <varlistentry>
           <term>keep</term>
@@ -1014,6 +1567,9 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
           <listitem>
             <para>Preserve line endings from original files. (This is the
             default value.)</para>
+
+            <para>Erhalten des Zeilenabschlusselemets der Quelldatei (dies ist
+            der Standardwert) </para>
           </listitem>
         </varlistentry>
 
@@ -1022,6 +1578,8 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
 
           <listitem>
             <para>Unix-style line endings</para>
+
+            <para>Unix artige Zeilenabschlusszeichen</para>
           </listitem>
         </varlistentry>
 
@@ -1030,6 +1588,8 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
 
           <listitem>
             <para>Only a Line Feed Character</para>
+
+            <para>Nur ein Zeilenvorschubzeichen</para>
           </listitem>
         </varlistentry>
 
@@ -1038,6 +1598,8 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
 
           <listitem>
             <para>MS-DOS-style line endings</para>
+
+            <para>MS-DOS artige Zeilenabschlusszeichen</para>
           </listitem>
         </varlistentry>
 
@@ -1046,6 +1608,8 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
 
           <listitem>
             <para>Carriage-return followed by a Line Feed</para>
+
+            <para>Zeilenumbruch gefolgt von einem Zeilenvorschub</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1063,13 +1627,23 @@ second-project-1.0-SNAPSHOT/src/test/java/org/sonatype/mavenbook/AppTest.java</s
       will cause a failure if Maven cannot find the file to be
       included.</para>
 
+      <para>Schliesslich, sollten Sie wirklich alle Dateiauswahlkriterien
+      einsetzen wollen, so können Sie auch noch das Element useStrictFiltering
+      auf einen Wert von true setzen (Standard ist false). Dies kann immer
+      dann nützlich sein, sollten unbenutzte Muster andeuten dass in
+      Übergangsverzeichnissen gewisse Dateien fehlen. Sollte das Element
+      useStrictFiltering auf true gesetzt sein, so wird das Assembly Plugin
+      abbrechen, sollte eines der Muster nicht erfüllt werden. In anderen
+      Worten, sollten Sie ein Einschlusskriterium gesetzt haben, und die
+      entsprechende Datei aus einem Build Lauf ist nicht vorhanden, so wird
+      Maven einen Fehler bemerken und abbrechen. </para>
+
       <!--TODO: JCasey, I had to take the statement about Ant Expressions out because I couldn't verify it.
 I can add this back in later.  I didn't want to talk about it without an example.  - TIM-->
     </section>
 
     <section id="assemblies-sect-default-excludes">
-      <title>Default Exclusion Patterns for
-      <sgmltag>fileSets</sgmltag></title>
+      <title>Standard Auschlussmuster in <sgmltag>fileSets</sgmltag></title>
 
       <para>When you use the default exclusion patterns, the Maven Assembly
       plugin is going to be ignoring more than just <acronym>SVN</acronym> and
@@ -1084,8 +1658,21 @@ I can add this back in later.  I didn't want to talk about it without an example
       <classname>DirectoryScanner</classname>. The contents of this variable
       are shown in <xref linkend="ex-default-excludes" />.</para>
 
+      <para>Beim Einsatz der Standard Ausschlussmuster, wird das Maven
+      Assembly Plugin mehr als nur die SVN und CVS Datein und Verzeichnisse
+      ignorieren. Standardmässig sind die Auschlussmuster durch die Klasse
+      <ulink
+      url="http://svn.codehaus.org/plexus/plexus-utils/trunk/src/main/java/org/codehaus/plexus/util/DirectoryScanner.java">DirectoryScanner</ulink>
+      des Projektes <ulink
+      url="http://plexus.codehaus.org/plexus-utils/">plexus-utils</ulink>
+      welches von Codehaus gehostet wird festgelegt. Die Menge der
+      Auschlusmuster ist als static, final StringArray mit dem Namen
+      <varname>DEFAULTEXCLUDES</varname> in DirectoryScanner definiert. Der
+      Inhalt des Array wird in <xref linkend="ex-default-excludes" />
+      wiedergegeben: </para>
+
       <example id="ex-default-excludes">
-        <title>Definition of Default Exclusion Patterns from Plexus
+        <title>Definition von Standard Ausschlussmustern von Plexus
         Utils</title>
 
         <programlisting language="java">   public static final String[] DEFAULTEXCLUDES = {
@@ -1136,10 +1723,20 @@ I can add this back in later.  I didn't want to talk about it without an example
       default exclusion patterns you set <sgmltag>useDefaultExcludes</sgmltag>
       to false and then define a set of exclusion patterns in your own
       assembly descriptor.</para>
+
+      <para>Die Standardmenge der Ausschlussmuster schliest Teporärdateien des
+      <ulink url="http://www.gnu.org/software/emacs/">GNU Emacs</ulink> sowie
+      weitere gebräuchlichen temporären Dateien des Mac und gebräuchlicher
+      Quellverwaltungssysteme (auch wenn Visual Source Save eher ein Fluch als
+      ein Verwaltungssystem ist) ein. Sollten Ihnen Sie diese Standardmuster
+      nicht ausreichen, können Sie diese übersteuern, Sie setzen
+      <sgmltag>useDefaultExcludes</sgmltag> auf false und definieren einen
+      Satz Auschlussmuster innerhalb Ihres eigenen Assembly Deskriptor.
+      </para>
     </section>
 
     <section id="assemblies-sect-output-algorithm">
-      <title><sgmltag>dependencySets</sgmltag> Section</title>
+      <title><sgmltag>Element dependencySets</sgmltag></title>
 
       <para>One of the most common requirements for assemblies is the
       inclusion of a project’s dependencies in an assembly archive. Where
@@ -1153,8 +1750,25 @@ I can add this back in later.  I didn't want to talk about it without an example
       path, dependencies are included or excluded from an assembly using a
       combination of Maven coordinates and dependency scopes.</para>
 
+      <para>Eine der geläufigsten Anforderungen an Zusammenstellungen ist der
+      Einschluss von Projektabhängigkeiten in ein Zielarchiv. Während
+      <sgmltag>file</sgmltag> und <sgmltag>fileSets</sgmltag> sich mit Dateien
+      Ihres Projektes befassen, sind Abhängigkeiten nicht an einen Ort
+      innerhalb Ihres Projektes gebunden. Artefakte von welchen ein Projekt
+      abhängig ist, müssen während des Build Laufes aufgelöst werden.
+      Artefakte aus Abhängigkeiten sind abstrakt, sie haben keinen bestimmten
+      Ort und werden mittels einem Satz symbolischer Koordinaten referenziert.
+      <sgmltag>file</sgmltag> und <sgmltag>fileSets</sgmltag> benötigen in der
+      Spezifikation einen konkreten Quellpfad, Abhängigkeiten hingegen werden
+      durch eine Kombination von Maven Koordinaten und Abhängigkeits
+      Gültigkeitsbereich ein eine Zusammenstellung eingebunden oder nicht.
+      </para>
+
       <para>The simplest <sgmltag>dependencySet</sgmltag> is an empty
       element:</para>
+
+      <para>Das einfachste <sgmltag>dependencySet</sgmltag> ist ein leeres
+      Element:</para>
 
       <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -1170,6 +1784,13 @@ I can add this back in later.  I didn't want to talk about it without an example
       your assembly archive. It will also copy the current project’s main
       artifact into the root of the assembly archive, if it exists.</para>
 
+      <para>Das aufgeführte <sgmltag>dependencySet</sgmltag> wird allen
+      Laufzeitabhängigkeiten Ihres Projektes Rechnung tragen (der
+      Gültigkeitsbereich Laufzeit schliesst den von Compile implizit ein.) und
+      wird diese Abhängigkeiten Ihrem Wurzelverzeichnis des Zielarchivs
+      zufügen. Darüberhinaus wird es des Projektes Hauptartefakt, so dieser
+      vorhanden ist, in das Wurzelverzeichnis kopieren. </para>
+
       <note>
         <para>Wait? I thought <sgmltag>dependencySet</sgmltag> was about
         including my project's dependencies, not my project's main archive?
@@ -1179,6 +1800,15 @@ I can add this back in later.  I didn't want to talk about it without an example
         needed to be preserved between a 2.1 and 2.2 release. You can control
         this behavior by changing the <sgmltag>useProjectArtifact</sgmltag>
         flag to <varname>false</varname>.</para>
+
+        <para>Einen Moment! Ich dachte <sgmltag>dependencySet</sgmltag>
+        befassten sich mit meinen Projektabhängigkeiten, nicht mit dem
+        entsprechenden Zielarchiv? Dieser eher widersinnige Nebeneffekt war
+        ein häufig ausgenutzter Fehler der Version 2.1 des Assembly Plugin,
+        und da Maven Rückwärtskompatibilität gross schreibt, musste dieses
+        fehlerhafte und widersinnige Verhalten zwischen Version 2.1 und 2.2
+        erhalten bleiben. Sie können dieses Verhalten über die Einstellung
+        <sgmltag>useProjectArtifact</sgmltag> bestimmen. </para>
       </note>
 
       <para>While the default dependency set can be quite useful with no
@@ -1197,6 +1827,23 @@ I can add this back in later.  I didn't want to talk about it without an example
       unpacked contents of all matching dependencies inside the archive’s root
       directory.</para>
 
+      <para>Obschon das Standard Abhänigkeitsset ohne weitere Konfigurationen
+      sehr nützlich sein kann, erlaubt dieser Abschnitt des Assembly
+      Deskriptors eine breite Vielfalt möglicher Einstellungen. Dies erlaubt
+      es Ihnen das Verhalten Ihren speziellen Bedürfnissen anzupassen. Zum
+      Beispiel mag das Erste was Sie am Set der Abhängigkeiten anpassen mögen
+      sein, den aktuellen Projektartefakten auszuschliessen. Sie tun dies
+      indem Sie die Einstellung <sgmltag>useProjectArtifact</sgmltag> auf
+      false setzen (aus Gründen der Rückwärtskompatibilität ist der
+      Standardwert true). Diese Einstellugn erlaubt es Ihnen die Build Lauf
+      Ausgabe unabhängig von den Abhängigkeiten zu definieren. Andererseits
+      könnte es sein, dass Sie sich dafür entscheiden, die Artefakte der
+      Abhängigkeiten entpackt abzulegen, Sie tun dies indem Sie die "unpack"
+      Einstellugn auf true setzen (Standardwert: false). Ist unpack auf true
+      gesetzt, so wird das Assembly plugin die Inhalte aller Artefakte der
+      Abhängigkeiten zusammen dem Wurzelverzeichnis Zielarchivs hinzufügen.
+      </para>
+
       <para>From this point, there are several things you might choose to do
       with this dependency set. The next sections discuss how to define the
       output location for dependency sets and how include and exclude
@@ -1204,8 +1851,16 @@ I can add this back in later.  I didn't want to talk about it without an example
       functionality of the dependency set by exploring some advanced options
       for unpacking dependencies.</para>
 
+      <para>Von diesem Punkt an wird es mehrere Möglichkeiten geben was Sie
+      mit Ihrem Set von Abhängigkeiten anstellen wollen. Die folgenden
+      Abschnitte beschreiben wie Sie die Ausgabelokation der dependencySets
+      definieren sowie Ein- und Auschluss von Abhängigkeiten nach
+      gültigkeitsbereich festlegen. Zum Schluss werden wir noch einmal zur
+      Entpackfunktionalität zurückkehren und einige der erweiterten
+      Möglichkeiten beim entpacken von Abhängigkeiten ansehen. </para>
+
       <section id="assemblies-sect-output-location">
-        <title>Customizing Dependency Output Location</title>
+        <title>Anpassen des Ausgabeortes von Abhängigkeiten</title>
 
         <para>There are two configuration options that are used in concert to
         define the location for a dependency file within the assembly archive:
@@ -1218,6 +1873,19 @@ I can add this back in later.  I didn't want to talk about it without an example
         <sgmltag>outputDirectory</sgmltag> element of the
         <sgmltag>dependencySet</sgmltag>, and you would supply something
         like:</para>
+
+        <para>Es bestehen zwei Möglichkeiten welche in Kombination eingesetzt
+        werden, um den Ort einer Abhängigkeit innerhalb eines
+        Zusammenstellungsarchivs zu definieren:
+        <sgmltag>outputDirectory</sgmltag> und
+        <sgmltag>outputFileNameMapping</sgmltag>. Es kann sein, dass Sie den
+        Ort der Abhängigkeiten innerhalb Ihrer Zusammenstellung direkt durch
+        Einstellungen an den Abhängigkeiten selbst bestimmen möchten. Nehmen
+        wir an, Sie möchten alle Abhängigkeiten in einem Verzeichnis welches
+        der groupId des Artefakten entspricht ablegen. In diesem Fall würden
+        Sie das Unterelement <sgmltag>outputDirectory</sgmltag> des Elements
+        dependencySet nutzen, und einen Eintrag wie folgenden
+        vornehmen:</para>
 
         <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -1233,10 +1901,19 @@ I can add this back in later.  I didn't want to talk about it without an example
         a subdirectory that matched the name of each dependency artifact's
         <sgmltag>groupId</sgmltag>.</para>
 
+        <para>Der Eintrag würde dazu führen, dass jede einzelne Abhängigkeit
+        in einem Unterverzeichnis abgelegt wird, welches den Namen des
+        Artefakts groupId trägt.</para>
+
         <para>If you wanted to perform a further customization and remove the
         version numbers from all dependencies. You could customize the the
         output file name for each dependency using the
         <sgmltag>outputFileNameMapping</sgmltag> element as follows:</para>
+
+        <para>Sollten Sie weitere Anpassungen vornehmen wollen, zum Beispiel
+        der Entfernung der Version aller Abhängigkeiten, können Sie für jede
+        Abhängigkeit den Eintrag für den Ausgabename mittels dem Element
+        <sgmltag>outputFileNameMapping</sgmltag> wie folgt bestimmen: </para>
 
         <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -1254,16 +1931,26 @@ I can add this back in later.  I didn't want to talk about it without an example
         <para>In the previous example, a dependency on
         <varname>commons:commons-codec</varname> version 1.3, would end up in
         the file <filename>commons/commons-codec.jar</filename>.</para>
+
+        <para>Im vorausgehenden Beispiel würde eine Abhängigkeit von
+        <varname>commons:commons-codec</varname> version 1.3 in der Datei
+        <filename>commons/commons-codec.jar</filename> abgelegt.</para>
       </section>
 
       <section id="assemblies-sect-interpolate">
-        <title>Interpolation of Properties in Dependency Output
-        Location</title>
+        <title>Auswertung von Properties bezüglich der Ausgabelokation von
+        Abhängigkeiten</title>
 
         <para>As mentioned in the Assembly Interpolation section above,
         neither of these elements are interpolated with the rest of the
         assembly descriptor, because their raw values have to be interpreted
         using additional, artifact-specific expression resolvers.</para>
+
+        <para>Wie zuvor bereits erwänt werden diese beiden Elemente
+        (outputDirectory und outputFileNameMapping) nicht mit dem Rest des
+        Assembly Deskriptors ausgewertet, da deren Rohwerte mittels
+        zusätzlicher, Artefakt spezifischer Ausdrucks Prozessoren verarbeitet
+        werden müssen. </para>
 
         <para>The artifact expressions available for these two elements vary
         only slightly. In both cases, all of the
@@ -1274,10 +1961,22 @@ I can add this back in later.  I didn't want to talk about it without an example
         element, the following process is applied to resolve
         expressions:</para>
 
+        <para>Die möglichen Artefaktausdrücke der zwei Elemente unterscheiden
+        sich nur wenig. In beiden Fällen, sind alle Ausdrücke im Stil von
+        <varname>\${project.*}</varname>, <varname>\${pom.*}</varname>, und
+        <varname>\${*}</varname> welche innerhalb eines POM sowie des
+        restlichen Assembly Deskriptors zur Verfügung stehen hier ebenfalls
+        einzusetzen. Für das Element <sgmltag>outputFileNameMapping</sgmltag>
+        wird der folgende Prozess zur Auswertung eines Ausdrucks angewandt:
+        </para>
+
         <orderedlist>
           <listitem>
             <para>If the expression matches the pattern
             <varname>\${artifact.*}</varname>:</para>
+
+            <para>Sollte der Ausdruck mit dem Muster
+            <varname>\${artifact.*}</varname> übereinstimmen: </para>
 
             <orderedlist numeration="loweralpha">
               <listitem>
@@ -1287,17 +1986,32 @@ I can add this back in later.  I didn't want to talk about it without an example
                 <varname>version</varname>, <varname>baseVersion</varname>,
                 <varname>scope</varname>, <varname>classifier</varname>, and
                 <varname>file.*</varname>)</para>
+
+                <para>Abgleich gegen eine Instanz des Artefakts der
+                Abhäniggkeit (löst: <varname>groupId</varname>,
+                <varname>artifactId</varname>, <varname>version</varname>,
+                <varname>baseVersion</varname>, <varname>scope</varname>,
+                <varname>classifier</varname>, und <varname>file.*</varname>
+                -Ausdrücke auf)</para>
               </listitem>
 
               <listitem>
                 <para>Match against the dependency’s
                 <classname>ArtifactHandler</classname> instance (resolves:
                 <varname>expression</varname>)</para>
+
+                <para>Abgleich gegen eine Instanz des
+                <classname>ArtifactHandler</classname> der Abhängigkeit (löst
+                Ausdrücke auf) </para>
               </listitem>
 
               <listitem>
                 <para>Match against the project instance associated with the
                 dependency’s Artifact (resolves: mainly POM properties)</para>
+
+                <para>Abgleich gegen eine Instanz des Projektes welche mit der
+                Abhängigkeit assoziiert ist (löst hauptsächlich POM Properties
+                auf) </para>
               </listitem>
             </orderedlist>
           </listitem>
@@ -1307,11 +2021,19 @@ I can add this back in later.  I didn't want to talk about it without an example
             <varname>\${pom.*}</varname> or
             <varname>\${project.*}</varname>:</para>
 
+            <para>Sollte der Ausdruck mit dem Muster
+            <varname>\${pom.*}</varname> or <varname>\${project.*}</varname>
+            übereinstimmen:</para>
+
             <orderedlist numeration="loweralpha">
               <listitem>
                 <para>Match against the project instance
                 (<classname>MavenProject</classname>) of the current
                 build.</para>
+
+                <para>Abgleich gegen die Instanz des Projektes
+                (<classname>MavenProject</classname>) des aktuellen Build
+                Laufs</para>
               </listitem>
             </orderedlist>
           </listitem>
@@ -1322,26 +2044,45 @@ I can add this back in later.  I didn't want to talk about it without an example
             contains a non-null classifier, resolve to the classifier preceded
             by a dash (-classifier). Otherwise, resolve to an empty
             string.</para>
+
+            <para>Sollte der Ausdruck dem Muster
+            <varname>\${dashClassifier?}</varname> entsprechen und die
+            Artefakt Instanz enthält eine classifier-Koordinate welche nicht
+            null ist, löse dies auf eine classifier-Koordinate mit
+            vorangestelltem Bindestrich auf, andernfalls zu einem Leerstring.
+            </para>
           </listitem>
 
           <listitem>
             <para>Attempt to resolve the expression against the project
             instance of the current build.</para>
+
+            <para>Versuche den Ausdruck gegen eine Projektinstanz des
+            aktuellen Build Laufs abzugleichen. </para>
           </listitem>
 
           <listitem>
             <para>Attempt to resolve the expression against the POM properties
             of the current build.</para>
+
+            <para>Versuche den Ausdruck gegen die POM Properties des aktuellen
+            Build Laufs abzugleichen. </para>
           </listitem>
 
           <listitem>
             <para>Attempt to resolve the expression against the available
             system properties.</para>
+
+            <para>Versuche den Ausdruck gegen die verfügbaren Systemproperties
+            abzugleichen</para>
           </listitem>
 
           <listitem>
             <para>Attempt to resolve the expression against the available
             operating-system environment variables.</para>
+
+            <para>Versuche den Ausdruck gegen die verfügbaren Betriebssystem
+            Umgebungsvariablen abzugleichen</para>
           </listitem>
         </orderedlist>
 
@@ -1352,6 +2093,14 @@ I can add this back in later.  I didn't want to talk about it without an example
         Therefore, the expressions listed above associated with those classes
         (1a, 1b, and 3 in the process listing above) are unavailable.</para>
 
+        <para>Das Element <sgmltag>outputDirectory</sgmltag> wird in gleicher
+        Weise abgearbeitet, der Unterschied ist, dass es keine verfügbaren
+        Informationen der Art <varname>\${artifact.*}</varname> gibt,
+        lediglich die <varname>\${project.*}</varname> Instanz des
+        entsprechenden Artefakts. Daher sind auch die Ausdrücke welche oben
+        aufgeführt wurden und von diesen Klassen abhängig sind nicht verfügbar
+        (1a, 1b und 3 der obigen Auflistung). </para>
+
         <para>How do you know when to use <sgmltag>outputDirectory</sgmltag>
         and <sgmltag>outputFileNameMapping</sgmltag>? When dependencies are
         unpacked only the <sgmltag>outputDirectory</sgmltag> is used to
@@ -1360,7 +2109,24 @@ I can add this back in later.  I didn't want to talk about it without an example
         <sgmltag>outputFileNameMapping</sgmltag> can be used together. When
         used together, the result is the equivalent of:</para>
 
+        <para>Wie weiss man wann es sinvoll ist die Elemente
+        <sgmltag>outputDirectory</sgmltag> und
+        <sgmltag>outputFileNameMapping</sgmltag> zu benutzen? Sobald
+        Abhängigkeiten entpackt werden, wird nur das
+        <sgmltag>outputDirectory</sgmltag> zur berechnung der Ausgabelokation
+        herangezogen. Im Fall dass Abhängigkeiten als ganze Datein (nicht
+        entpackt) verwaltet werden, können beide Elemente
+        <sgmltag>outputDirectory</sgmltag> und
+        <sgmltag>outputFileNameMapping</sgmltag> eingesetzt werden. Werden die
+        Elemente gemeinsam genutzt, so ist das Resulat gelichbedeutend mit:
+        </para>
+
         <programlisting language="xml">&lt;archive-root-dir&gt;/&lt;outputDirectory&gt;/&lt;outputFileNameMapping&gt;</programlisting>
+
+        <para>Sollte <sgmltag>outputDirectory</sgmltag> fehlen, so wird es
+        nicht angezogen, sollte <sgmltag>outputFileNameMapping</sgmltag>
+        fehlen, so ist der Standardwert:
+        <code>\${artifact.artifactId}-\${artifact.version}\${dashClassifier?}.\${artifact.extension}</code></para>
 
         <para>When <sgmltag>outputDirectory</sgmltag> is missing, it is not
         used. When <sgmltag>outputFileNameMapping</sgmltag> is missing, its
@@ -1369,7 +2135,8 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-include-by-scope">
-        <title>Including and Excluding Dependencies by Scope</title>
+        <title>Ein- und Auschluss von Abhängigkeiten in Relation zum
+        Gültigkeitsbereich</title>
 
         <para>In <xref
         linkend="pom-relationships-sect-project-dependencies" />, it was noted
@@ -1388,6 +2155,27 @@ I can add this back in later.  I didn't want to talk about it without an example
         dependencies are present in the compilation classpath, but not in the
         dependency set that should be bundled with the project’s artifact or
         assembly.</para>
+
+        <para>Im Kapitel <xref
+        linkend="pom-relationships-sect-project-dependencies" /> wurde bereits
+        ausgeführt, dass alle Abhängigkeiten den einen oder anderen
+        Gültigkeitsbereich haben. Der Gültigkeitsbereich bestimmt, wann im
+        Laufe eines Builds eine Abhängigkeit normalerweise zum Zug kommt. Zum
+        Beispiel werden Abhängigkeiten mit dem Gültigkeitsbereich Test nicht
+        in den Klassenpfad zur Kompilierung der Quellen des Hauptprojektes
+        eingebunden. Diese werden in den Klassenpfad eingebuden sobald die
+        Unittest Quellen verarbeitet werden. Das beruht darauf, dass Ihres
+        Projektes Hauptquellen keinen Code enthalten sollten welcher
+        spezifisch zum Testen erstellt wurde, da dies keine Funktion des
+        Produktes darstellt (es ist eine Funktion des Build Lauf). In gleicher
+        Weise werden Artefakte mit Gultigkeitsbereich provided behandelt;
+        Maven geht davon aus, dass diese in der Laufzeitumgebung vorhanden
+        sind. Jedoch, sollte ein Projekt auf eine bestimmten Abhängigkeit mit
+        Gültigkeitsbereich provided aufbauen, wird es diese Abhängigkeit mit
+        aller Wahrscheinlichkeit zum kompilierne benötigen. Daher werden
+        Abhängigkeiten vom Gültigekeitsbereich provided dem
+        Kompilationsklassenpfad hinzugefügt, nicht aber in die
+        Zielzusammenstellung. </para>
 
         <para>Also from <xref
         linkend="pom-relationships-sect-project-dependencies" />, recall that
@@ -1413,7 +2201,8 @@ I can add this back in later.  I didn't want to talk about it without an example
         similar to the following XML.</para>
 
         <example>
-          <title>Defining Dependency Sets Using Scope</title>
+          <title>Erstellen von Abhängigkeitsgruppen mittels
+          Gültigkeitsbereichen</title>
 
           <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -1481,7 +2270,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-fine-tune">
-        <title>Fine Tuning: Dependency Includes and Excludes</title>
+        <title>Fine Tuning: Abhängigkeites Ein- und Ausschlüsse</title>
 
         <para>A resource dependency might be as simple as a set of resources
         (CSS, Javascript, and Images) in a project that has an assembly which
@@ -1562,7 +2351,7 @@ I can add this back in later.  I didn't want to talk about it without an example
         differently:</para>
 
         <example id="ex-complex-dependencySet">
-          <title>Using Dependency Excludes and Includes in
+          <title>Benutzung von Abhängkeits Ein- und Ausschlüssen in
           <sgmltag>dependencySets</sgmltag></title>
 
           <programlisting language="xml">&lt;assembly&gt;
@@ -1641,8 +2430,8 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-transitive">
-        <title>Transitive Dependencies, Project Attachments, and Project
-        Artifacts</title>
+        <title>Transitive Abhängigkeiten, Projekt Anhänge, and Projekt
+        Artifakten</title>
 
         <para>The <sgmltag>dependencySet</sgmltag> section supports two more
         general mechanisms for tuning the subset of matching artifacts:
@@ -1737,7 +2526,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-unpack">
-        <title>Advanced Unpacking Options</title>
+        <title>Fortgeschrittene Entpackoptionen</title>
 
         <para>As we discussed previously, some project dependencies may need
         to be unpacked in order to create a working assembly archive. In the
@@ -1764,7 +2553,8 @@ I can add this back in later.  I didn't want to talk about it without an example
         handles resource artifacts:</para>
 
         <example>
-          <title>Excluding Files from a Dependency Unpack</title>
+          <title>Ausschliesen von Dateien von einem Abhängigkeits Unpack
+          Bündel</title>
 
           <programlisting language="xml">&lt;asembly&gt;
   ...
@@ -1820,7 +2610,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-summarizing">
-        <title>Summarizing Dependency Sets</title>
+        <title>Zusammenfassung von Abhängigkeitsbündeln</title>
 
         <para>Finally, it’s worth mentioning that dependency sets support the
         same <sgmltag>fileMode</sgmltag> and <sgmltag>directoryMode</sgmltag>
@@ -1831,7 +2621,7 @@ I can add this back in later.  I didn't want to talk about it without an example
     </section>
 
     <section id="assemblies-sect-modulesets">
-      <title><sgmltag>moduleSets</sgmltag> Sections</title>
+      <title><sgmltag>Element moduleSets</sgmltag></title>
 
       <para>Multi-module builds are generally stitched together using the
       parent and modules sections of interrelated <acronym>POM</acronym>s.
@@ -1874,7 +2664,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       about selecting which modules to process.</para>
 
       <section id="assemblies-sect-module-selection">
-        <title>Module Selection</title>
+        <title>Modulauswahl</title>
 
         <para>By now, you should be familiar with
         <sgmltag>includes</sgmltag>/<sgmltag>excludes</sgmltag> patterns as
@@ -1927,7 +2717,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-sources-section">
-        <title>Sources Section</title>
+        <title>Element sources</title>
 
         <para>Suppose you want to include the source of all modules in your
         project's assembly, but you would like to exclude a particular module.
@@ -1939,7 +2729,7 @@ I can add this back in later.  I didn't want to talk about it without an example
         <varname>secret-sauce</varname> module from the assembly.</para>
 
         <example id="ex-include-exclude-moduleSet">
-          <title>Includes and Excluding Modules with a
+          <title>Ein- und Ausschluss von Modulen mittels einem a
           <sgmltag>moduleSet</sgmltag></title>
 
           <programlisting language="xml">&lt;assembly&gt;
@@ -1990,9 +2780,10 @@ I can add this back in later.  I didn't want to talk about it without an example
         subdirectory named after the module’s <varname>artifactId</varname>.
         However, since Maven allows modules that are not in directories named
         after the module project’s <varname>artifactId</varname>, it’s often
-        better to use the expression <varname>\${module.basedir.name}</varname>
-        to preserve the module directory’s actual name
-        (<varname>\${module.basedir.name}</varname> is the same as calling
+        better to use the expression
+        <varname>\${module.basedir.name}</varname> to preserve the module
+        directory’s actual name (<varname>\${module.basedir.name}</varname> is
+        the same as calling
         <methodname>MavenProject.getBasedir().getName()</methodname>). It is
         critical to remember that modules are not required to be
         subdirectories of the project that declares them. If your project has
@@ -2031,7 +2822,7 @@ I can add this back in later.  I didn't want to talk about it without an example
       </section>
 
       <section id="assemblies-sect-interpolate-modulesets">
-        <title>Interpolation of <sgmltag>outputDirectoryMapping</sgmltag> in
+        <title>Interpolation des <sgmltag>outputDirectoryMapping</sgmltag> in
         <sgmltag>moduleSets</sgmltag></title>
 
         <para>In <xref linkend="assemblies-sect-output-location" />, we used
@@ -2043,10 +2834,10 @@ I can add this back in later.  I didn't want to talk about it without an example
         <xref linkend="assemblies-sect-output-algorithm" />).</para>
 
         <para>In <xref linkend="ex-include-exclude-moduleSet" />, we used the
-        expression <varname>\${module.basedir.name}</varname>. You might notice
-        that the root of that expression, <varname>module</varname>, is not
-        listed in the mapping-resolution algorithm from the dependency sets
-        section; this object root is specific to configurations within
+        expression <varname>\${module.basedir.name}</varname>. You might
+        notice that the root of that expression, <varname>module</varname>, is
+        not listed in the mapping-resolution algorithm from the dependency
+        sets section; this object root is specific to configurations within
         <sgmltag>moduleSets</sgmltag>. It works in exactly the same way as the
         <varname>\${artifact.*}</varname> references available in the
         <sgmltag>outputFileNameMapping</sgmltag> element, except it is applied
@@ -2091,7 +2882,8 @@ I can add this back in later.  I didn't want to talk about it without an example
         linkend="ex-include-javadoc-moduleset" />.</para>
 
         <example id="ex-include-javadoc-moduleset">
-          <title>Including JavaDoc from Modules in an Assembly</title>
+          <title>Einschliessen von JavaDoc von Modulen in einem
+          Assembly</title>
 
           <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -2132,9 +2924,9 @@ I can add this back in later.  I didn't want to talk about it without an example
         <varname>\${artifact.*}</varname> inside a
         <sgmltag>dependencySet</sgmltag>’s
         <sgmltag>outputFileNameMapping</sgmltag> configuration is also
-        available here as <varname>\${module.*}</varname>. The same applies for
-        <sgmltag>outputFileNameMapping</sgmltag> when used directly within a
-        <sgmltag>binaries</sgmltag> section.</para>
+        available here as <varname>\${module.*}</varname>. The same applies
+        for <sgmltag>outputFileNameMapping</sgmltag> when used directly within
+        a <sgmltag>binaries</sgmltag> section.</para>
 
         <para>Finally, let’s examine an example where we simply want to
         process the module’s artifact and its runtime dependencies. In this
@@ -2145,8 +2937,8 @@ I can add this back in later.  I didn't want to talk about it without an example
         listing in <xref linkend="ex-the-big-include" />:</para>
 
         <example id="ex-the-big-include">
-          <title>Including Module Artifacts and Dependencies in an
-          Assembly</title>
+          <title>Einschliessen von Module Artifakten und Abhängigkeiten in
+          einem Assembly</title>
 
           <programlisting language="xml">&lt;assembly&gt;
   ...
@@ -2190,7 +2982,7 @@ I can add this back in later.  I didn't want to talk about it without an example
 
       <section id="assemblies-sect-modulesets-parent-pom">
         <title><sgmltag>moduleSets</sgmltag>, Parent <acronym>POM</acronym>s
-        and the <sgmltag>binaries</sgmltag> Section</title>
+        und das Element <sgmltag>binaries</sgmltag></title>
 
         <para>Finally, we close the discussion about module handling with a
         strong warning. There are subtle interactions between Maven’s internal
@@ -2223,7 +3015,7 @@ I can add this back in later.  I didn't want to talk about it without an example
     </section>
 
     <section id="assemblies-sect-repositories">
-      <title>Repositories Section</title>
+      <title>Element Repositories</title>
 
       <para>The repositories section represents a slightly more exotic feature
       in the assembly descriptor, since few applications other than Maven can
@@ -2274,7 +3066,7 @@ doesn't make sense to new users.-->
     </section>
 
     <section id="assemblies-sect-managing-root">
-      <title>Managing the Assembly’s Root Directory</title>
+      <title>Verwalten des Wurzelverzeichnisses des Assembly</title>
 
       <para>Now that we’ve made it through the main body of the assembly
       descriptor, we can close the discussion of content-related descriptor
@@ -2300,12 +3092,12 @@ doesn't make sense to new users.-->
       root directory regardless of the <acronym>POM</acronym>’s version or
       other information. By default, the <sgmltag>baseDirectory</sgmltag>
       element has a value equal to
-      <varname>\${project.artifactId}-\${project.version}</varname>. However, we
-      can easily set this element to any value that consists of literal
+      <varname>\${project.artifactId}-\${project.version}</varname>. However,
+      we can easily set this element to any value that consists of literal
       strings and expressions which can be interpolated from the current
       <acronym>POM</acronym>, such as
-      <varname>\${project.groupId}-\${project.artifactId}</varname>. This could
-      be very good news for your documentation team! (We all have those,
+      <varname>\${project.groupId}-\${project.artifactId}</varname>. This
+      could be very good news for your documentation team! (We all have those,
       right?)</para>
 
       <para>Another configuration available is the
@@ -2331,7 +3123,7 @@ doesn't make sense to new users.-->
     </section>
 
     <section id="assemblies-sect-componentDescriptors">
-      <title><sgmltag>componentDescriptors</sgmltag> and
+      <title><sgmltag>componentDescriptors</sgmltag> und
       <sgmltag>containerDescriptorHandlers</sgmltag></title>
 
       <para>To round out our exploration of the assembly descriptor, we should
@@ -2407,7 +3199,7 @@ doesn't make sense to new users.-->
     productive and less painful.</para>
 
     <section id="assemblies-sect-standard-reusable">
-      <title>Standard, Reusable Assembly Descriptors</title>
+      <title>Standardisierte, wiederverwendbare Assembly Descriptoren</title>
 
       <para>Up to now, we’ve been talking mainly about one-off solutions for
       building a particular type of assembly. But what do you do if you have
@@ -2603,7 +3395,7 @@ doesn't make sense to new users.-->
     </section>
 
     <section id="assemblies-set-dist-assemblies">
-      <title>Distribution (Aggregating) Assemblies</title>
+      <title>Verteilung (Aggregierung) von Assemblies</title>
 
       <para>As mentioned above, the Assembly plugin provides multiple ways of
       creating many archive formats. Distribution archives are typically very
@@ -2851,7 +3643,7 @@ run before the assembly is generated.
   </section>
 
   <section id="assemblies-sect-summary">
-    <title>Summary</title>
+    <title>Zusammenfassung</title>
 
     <para>As we’ve seen in this chapter, the Maven Assembly plugin offers
     quite a bit of potential for creating custom archive formats. While the

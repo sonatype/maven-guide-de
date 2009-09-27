@@ -4,29 +4,32 @@
 <appendix id="appendix-pom-details">
   <title>Appendix: POM Details</title>
 
-  <para>POM stands for "Project Object Model". It is an XML representation of
-  a Maven project stored in a file named <filename>pom.xml</filename>. A
-  project is much more than just source code and configuration, software
-  projects are defined by the code, people, organizations, and systems
-  involved in the day to day collaboration that creates software. The POM
-  captures every aspect of a project. The POM encompasses concepts like
-  configuration files, the developers involved, the defect tracking system,
-  the organization, the licenses, the project's URL, the dependencies, and all
-  of the other information involved in a project. In Maven, code is secondary
-  to the POM; a project need not contain any code at all, simply a
-  <filename>pom.xml</filename>.</para>
+  <para><acronym>POM</acronym> steht für "Project Objekt Modell". Es stellt
+  eine <acronym>XML</acronym> Darstellung eines Maven Projektes dar, welche in
+  einer Datei namens <filename>pom.xml</filename> abgelegt wird. Ein Projekt
+  ist viel mehr als nur Quellcode und Konfiguration, Softareprojekte werden
+  definiert durch Quellen, Personen, Organisationen sowie Systemen welche in
+  der täglichen Zusammenarbeit dienen. Im <acronym>POM</acronym> werden alle
+  Aspekte eines Projektes erfass: Konzepte wie Konfigurations-Dateien,
+  involvierte Entwickler, dem Defect Tracking Systemen, der Organisation, der
+  Lizenzen, den Projekt <acronym>URL</acronym>s, den Abhängigkeiten sowie
+  allen anderen Informationen eines Projektes. Für
+  <productname>Maven</productname> sind Quelldateien zweitrangig gegenüber dem
+  <acronym>POM</acronym>; ein Projekt braucht tatsächlich gar keine
+  Quelldateien, lediglich eine eine <filename>pom.xml</filename>-Datei ist
+  notwendig.</para>
 
   <section id="appendix-pom-sect-intro">
-    <title>POM Structure</title>
+    <title>Die POM Struktur</title>
 
-    <para>The following is a list of elements which can appear directly under
-    a POM's <sgmltag>project</sgmltag> element.</para>
+    <para>Im folgenden eine Liste aller Elemente welche direkt unter dem
+    Wurzelelement eines POM Projekts stehen können. </para>
 
     <!--TODO: The separation of elements in the POM seems very arbitrary, why is dependencies in POM Relationships and not in the Build 
 environment.  I'm following Eric's lead here, I wonder if I should.-->
 
     <para><example>
-        <title>Top-level Elements of a Project Object Model (POM)</title>
+        <title>Top-level Elementd eines Projekt Objekt Modells (POM)</title>
 
         <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -40,7 +43,7 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
   &lt;dependencies&gt;...&lt;/dependencies&gt;
   &lt;packaging&gt;...&lt;/packaging&gt;
 
-  &lt;!-- General Project Information --&gt;
+  &lt;!-- Allgemeine Projekt Informationen --&gt;
   &lt;name&gt;...&lt;/name&gt;
   &lt;description&gt;...&lt;/description&gt;
   &lt;url&gt;...&lt;/url&gt;
@@ -70,12 +73,14 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
 </programlisting>
       </example></para>
 
-    <para>Notice that <sgmltag>modelVersion</sgmltag> contains 4.0.0. When
-    this book was written, this was the only supported POM version for Maven
-    2. <sgmltag>modelVersion</sgmltag> is always required.</para>
+    <para>Beachten Sie bitte, dass der Eintrag für
+    <sgmltag>modelVersion</sgmltag> "4.0.0" ist. Zum Zeitpunkt, als dies
+    geschrieben wurde, war dies die einzige unterstützte Version von
+    <productname>Maven2</productname>. <sgmltag>modelVersion</sgmltag> wird
+    immer benötigt. </para>
 
     <figure>
-      <title>The Contents of a Project Object Model (POM)</title>
+      <title>Der Inhalt eines Projekt Objekt Modells (POM)</title>
 
       <mediaobject>
         <imageobject>
@@ -86,17 +91,17 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
   </section>
 
   <section id="appendix-pom-sect-xml-schema">
-    <title>POM XML Schema</title>
+    <title>Das POM XML Schema</title>
 
-    <para>The POM XSD is available at <ulink
+    <para>Das Schema POM XSD ist unter <ulink
     url="http://maven.apache.org/maven-v4_0_0.xsd">http://maven.apache.org/maven-v4_0_0.xsd</ulink>
-    and the Settings XSD is available at <ulink
-    url="http://maven.apache.org/xsd/settings-1.0.0.xsd">http://maven.apache.org/xsd/settings-1.0.0.xsd</ulink>.
-    They can be referenced in the POM by setting the &lt;project&gt; element
-    like so:</para>
+    abzurufen, das Settings XSD ist unter <ulink
+    url="http://maven.apache.org/xsd/settings-1.0.0.xsd">http://maven.apache.org/xsd/settings-1.0.0.xsd</ulink>
+    verfügbar. Diese können in einem <acronym>POM</acronym> durch das setzen
+    des &lt;project&gt;-Elements wie folgt eingebunden werden:</para>
 
     <para><example>
-        <title>Namespace and XML Schema Location for pom.xml</title>
+        <title>Namespace und XML Schema Lokation in der pom.xml</title>
 
         <programlisting language="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -107,10 +112,10 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
 </programlisting>
       </example></para>
 
-    <para>And settings as such:</para>
+    <para>Und in der Settings.xml wie folgt: </para>
 
     <para><example>
-        <title>Namespace and XML Schema Location for settings.xml</title>
+        <title>Namespace und XML Schema Lokation in der settings.xml</title>
 
         <programlisting language="xml">&lt;settings xmlns="http://maven.apache.org/POM/4.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -121,30 +126,35 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
 </programlisting>
       </example></para>
 
-    <para>Finally, this <ulink
-    url="http://sonatype.com/book/images/pom-details/pom-cheat-sheet.png">cheat
-    sheet</ulink> may help you visualize the layout.</para>
+    <para>Schliesslich kann Ihnen das folgenden <ulink
+    url="http://sonatype.com/book/images/pom-details/pom-cheat-sheet.png">Hilfsblatt</ulink>
+    helfen, sich den Aufbau zu verbildlichen.</para>
   </section>
 
   <section id="appendix-pom-sect-basics">
-    <title>The Basics</title>
+    <title>Die Grundlagen</title>
 
-    <para>The POM contains all necessary information about a project, as well
-    as configurations of plugins to be used during the build process. It is,
-    effectively, the declarative manifestation of the "who", "what", and
-    "where", while the build lifecycle is the "when" and "how". That is not to
-    say that the POM cannot affect the flow of the lifecycle  it can. For
-    example, by configuring the maven-antrun-plugin, one can effectively embed
-    ant tasks inside of the POM. It is ultimately a declaration, however.
-    Where as a build.xml tells ant precisely what to do when it is run
-    (procedural), a POM states its configuration (declarative). If some
-    external force causes the lifecycle to skip the ant plugin execution, it
-    will not stop the plugins that are executed from doing their magic. This
-    is unlike a build.xml file, where tasks are almost always dependant on the
-    lines executed before it.</para>
+    <para>Ein <acronym>POM</acronym> enthält alle notwendigen Informationen
+    eines Projektes sowie die Konfiguration der Plugins welche zur Erstellung
+    zum Einsatz kommen. Es ist in diesem Sinn die deklaritive Beschreibung des
+    "wer", "was", und "wo", während der Build-Lebenszyklus das "wann" und
+    "wie" darstellt. Das soll aber nicht bedeuten, dass das
+    <acronym>POM</acronym> nicht auch den Build-Lebenszyklus beeinflussen
+    kann: es kann. Hier ein Beispiel: durch die Konfiguration des Maven Antrun
+    Plugin kann man Ant Tasks in einem <acronym>POM</acronym> einbetten. Dies
+    geschieht letztendlich deklarativ. Im Unterschied zu einem
+    Ant-<filename>build.xml</filename> in welchem präziese augewiesen ist
+    welche Schritte wie auszuführen sind, wird im <acronym>POM</acronym>
+    lediglich eine Konfiguration hinterlegt - das ist deklarativ. Sollte ein
+    äusserer Einfluss nun dazu führen, dass der konfigurierte Ant-Task
+    übersprungen wird, so wird dies keine Auswirkung auf den Ablauf der
+    anderen Plugins haben, diese werden weiter deren konfigurierte Aktionen
+    abarbeiten. Dies ist ein wesentlicher Unterschied zur Ant
+    <filename>build.xml</filename> in welcher Tasks beinahe immer davon
+    abhängig sind, dass die vorgehenden Zeilen abgearbeitet wurden. </para>
 
     <para><example>
-        <title>Defining Maven Coordinates in a POM</title>
+        <title>Definition der Maven Koordinaten in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -156,63 +166,72 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
       </example></para>
 
     <section id="appendix-pom-sect-coords">
-      <title>Maven Coordinates</title>
+      <title>Maven Koordinaten</title>
 
-      <para>The POM defined above is the minimum that Maven 2 will allow.
-      groupId:artifactId:version are all required fields (although, groupId
-      and version need not be explicitly defined if they are inherited from a
-      parent  more on inheritance later). The three fields act much like an
-      address and timestamp in one. This marks a specific place in a
-      repository, acting like a coordinate system for Maven projects.</para>
+      <para>Das oben aufgeführte POM ist das minimalste POM welches von Maven2
+      erlaubt ist. groupId:artifactId:version sind Pflichtfelder (wobei zu
+      bemerken ist, dass groupId sowie version im Fall dass diese vererbt
+      wurden nicht explizit definiert werden müssen; Details bezüglich
+      Vererbung später). Diese drei Felder bestimmen eine Art Adresse und
+      Timestamp in einem, zusammen bestimmen sie einen Platz innerhalb des
+      Repositories, diese Felder stellen eine Art Koordinatensystem für Maven
+      Projekte dar. </para>
 
-      <para>* groupId: This is generally unique amongst an organization or a
-      project. For example, all core Maven artifacts do (well, should) live
-      under the groupId org.apache.maven. Group ID's do not necessarily use
-      the dot notation, for example, the junit project. Note that the
-      dot-notated groupId does not have to correspond to the package structure
-      that the project contains. It is, however, a good practice to follow.
-      When stored within a repository, the group acts much like the Java
-      packaging structure does in an operating system. The dots are replaced
-      by OS specific directory separators (such as / in Unix) which becomes
-      a relative directory structure from the base repository. In the example
-      given, the org.codehaus.mojo group lives within the directory
-      $M2_REPO/org/codehaus/mojo.</para>
+      <para>* groupId: Diese ist im Allgemeinen innerhalb einer Organisation
+      oder eines Projektes eindeutig bestimmt. So haben zum Beispiel alle
+      Kern-Artefakte (zumindest sollten) eine <sgmltag>groupId</sgmltag> von
+      <sgmltag>org.apache.maven</sgmltag>. Group Ids sind nicht unbedingt an
+      die Punktnotation gebunden, sehen Sie sich zum Beispiel das JUnit
+      Projekt an! Es ist ebenfalls wichtig zu betonen, dass die
+      Punkt-notierten Group Ids nicht zwingend der darunterliegenden
+      Paketstruktur entsprechen müssen, Wo dies möglich ist, so sollte man es
+      dennoch tun. Inerhalb eines Repositories dient eine Group Id in gleicher
+      Weise wie die Package-Struktur von Java für ein Betriebssystem. Die
+      Punkte werden durch einen Betriebssystem abhängiges Trennzeichen ersetzt
+      (unter Unix "/") und erlaubt damit eine relative Verzeichnisstruktur
+      innerhalb des Basisverzeichnisses zu erstellen. Im vorgestellten
+      Beispiel steht die Group Id von org.codehaus.mojo innerhalb des
+      Verzeichnisses <filename>$M2_REPO/org/codehaus/mojo</filename>. </para>
 
-      <para>* artifactId: The artifactId is generally the name that the
-      project is known by. Although the groupId is important, people within
-      the group will rarely mention the groupId in discussion (they are often
-      all be the same ID, such as the <ulink
-      url="http://mojo.codehaus.org/">Codehaus Mojo</ulink> project groupId:
-      org.codehaus.mojo). It, along with the groupId, create a key that
-      separates this project from every other project in the world (at least,
-      it should :) ). Along with the groupId, the artifactId fully defines the
-      artifacts living quarters within the repository. In the case of the
-      above project, my-project lives in
-      $M2_REPO/org/codehaus/mojo/my-project.</para>
+      <para>* artifactId: Die Artefact ID ist im Allgemeinen der Name mit
+      welchem das Projekt bekannt ist. Auch wenn die Group ID wichtig ist, so
+      werden die Leute innerhalb der Gruppe diese kaum jemals in Diskussionen
+      erwähnen (gewöhnlich sind alle Artefakte von der selben Gruppe, wie zum
+      Beispiel jene vom Codehaus Mojo Projekt, welche alle die Group Id von
+      org.codehaus.mojo tragen). Die Artefact ID zusammen mit der Group ID
+      bilden einen einzigartigen Schlüssel welcher diese Projekt von allen
+      anderen Projekten in der Welt (so zumindest die Theorie) unterscheidet.
+      Zusammen mit der Group Id definiert die Artefakt Id genau den Ort im
+      Repository an welchem der Artefakt aufzufinden ist. Im oben
+      vorgestellten Fall befindet sich das Projekt im Verzeichnis
+      <filename>$M2_REPO/org/codehaus/mojo/my-project</filename>. </para>
 
-      <para>* version: This is the last piece of the naming puzzle.
-      groupId:artifactId denote a single project but they cannot delineate
-      which incarnation of that project we are talking about. Do we want the
-      junit:junit of today (version 4), or of four years ago (version 2)? In
-      short: code changes, those changes should be versioned, and this element
-      keeps those versions in line. It is also used within an artifacts
-      repository to separate versions from each other. my-project version 1.0
-      files live in the directory structure
-      $M2_REPO/org/codehaus/mojo/my-project/1.0.</para>
+      <para>* version: Dies ist das letzte Teil des Namensgebungs-Puzzles:
+      groupId.artifactId bestimmen ein Projekt eindeutig, aber es ist
+      unmöglich die tatsächliche Incarnation des Projektes zu bestimmen. Reden
+      wir vom heutigen junit:junit (Version 4) oder von JUnit vor zwei Jahren
+      (Version 2)? Die Kurzfassung: Quellcode-Änderungen, diese sollten
+      versioniert werden. Das Element "version" gibt dieser Dimension Ordnung.
+      Das Element kommt ebenfalls innerhalb eines Artefakt-Repositories zum
+      Zuge um Versionen voneinander zu trennen: my-project Version 1.0 liegt
+      daher unter der Verzeichnisstruktur
+      <filename>$M2_REPO/org/codehaus/mojo/my-project/1.0.</filename></para>
 
-      <para>The three elements given above point to a specific version of a
-      project letting Maven knows who we are dealing with, and when in its
-      software lifecycle we want them.</para>
+      <para>Die drei oben dargestellten Elemente weisen den Weg zu einer
+      bestimmten Version eines bestimmten Projektes, und sie geben Maven die
+      notwendigen Informationen mit welchem Artefakt wir es zu tun haben und
+      wo innerhalb des Software Lebenszyklus ein bestimmter Artefakt benötigt
+      wird. </para>
 
-      <para>* packaging: Now that we have our address structure of
-      groupId:artifactId:version, there is one more standard label to give us
-      a really complete address. That is the project's artifact type. In our
-      case, the example POM for org.codehaus.mojo:my-project:1.0 defined above
-      will be packaged as a jar. We could make it into a war by declaring a
-      different packaging:</para>
+      <para>* packaging: Nun da wir das Aussehen der Addresse im Allgemeinen
+      definiert haben (groupId:artifactId:version) gibt es noch ein weiteres
+      Standardfeld vorzustellen um die Addresse zu verfolständigen: Der
+      Artefakttyp unseres Projektes: In unserem Beispiel eines POM wie zuvor
+      vorgestellt ist dies der Typ "jar". Wir könnten dies auf den Typ "war"
+      ändern, indem wir die Beschreibung wie folgt anpassen: </para>
 
       <para><example>
-          <title>Configuring a Project for WAR Packaging</title>
+          <title>Konfiguration eines Projektes für das WAR Packaging</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -222,38 +241,43 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
 </programlisting>
         </example></para>
 
-      <para>When no packaging is declared, Maven assumes the artifact is the
-      default: jar. The valid types are Plexus role-hints (read more on Plexus
-      for a explanation of roles and role-hints) of the component role
-      org.apache.maven.lifecycle.mapping.LifecycleMapping. The current core
-      packaging values are: pom, jar, maven-plugin, ejb, war, ear, rar, par.
-      These define the default list of goals which execute to each
-      corresponding build lifecycle stage for a particular package
-      structure.</para>
+      <para>Sollte kein Packaging Typ bestimmt sein, so geht Maven vom
+      standard Typen aus: jar. Die gültigen Typen sind Plexus Rollen Hinweise
+      (bezüglich Rollen und Rollen Hinweisen verweisen wir auf weiterführende
+      Plexus Literatur) der Komponenten Rolle
+      org.apache.maven.lifecycle.mapping.LifecycleMapping. Die derzeitig
+      gültigen Kern Packetierungswerte sind: pom, jar, maven-plugin, ejb, war,
+      ear, rar und par. Diese bestimmen die Standardliste der Goals welche
+      ausgeführt werden, um die entsprechenden Build Lebenszyklus Phasen einer
+      bestimmten Packaging Struktur auszuführen. </para>
 
-      <para>You will sometimes see Maven print out a project coordinate as
-      groupId:artifactId:packaging:version.</para>
+      <para>Sie werden immer wieder sehen wie Maven die Projektkoordinaten in
+      der Form groupId:artifactId:packaging:version ausgibt.</para>
 
-      <para>* classifier: You may occasionally find a fifth element on the
-      coordinate, and that is the classifier. We will visit the classifier
-      later, but for now it suffices to know that those kinds of projects are
-      displayed as groupId:artifactId:packaging:classifier:version.</para>
+      <para>* classifier: Hin und wieder wird Ihnen ein weiteres, ein fünftes
+      Element der Koordinaten begegnen, das ist der classifier. Wir werden auf
+      den classifier später zurückkommen. Für den Moment genügt es zu wissen,
+      das derartige Projekte in der Form
+      groupId:artifactId:packaging:classifier:version ausgegeben werden.
+      </para>
     </section>
 
     <section id="appendix-pom-sect-relationships">
-      <title>POM Relationships</title>
+      <title>POM Beziehungen</title>
 
-      <para>One powerful aspect of Maven is in its handling of project
-      relationships; that includes dependencies (and transitive dependencies),
-      inheritance, and aggregation (multi-module projects). Dependency
-      management has a long tradition of being a complicated mess for anything
-      but the most trivial of projects. "Jarmageddon" quickly ensues as the
-      dependency tree becomes large and complicated. "Jar Hell" follows, where
-      versions of dependencies on one system are not equivalent to versions as
-      those developed with, either by the wrong version given, or conflicting
-      versions between similarly named jars. Maven solves both problems
-      through a common local repository from which to link projects correctly,
-      versions and all.</para>
+      <para>Eine der mächtigen Seiten von Maven ist der Umgang mit Beziehungen
+      von Projekten untereinander; dies umfasst Abhängigkeiten (und deren
+      transitiven Abhängigkeiten), Vererbung sowie Aggregierung (multi
+      modulare Projekte). Abhängigkeitsverwaltung hat eine lange Tradition
+      darin, für alles ausser den allereinfachsten Projekten eine komplizierte
+      Scheusslichkeit darzustellen. "Jarmaggeddon" folgt auf den Fuss sobald
+      die Abhängigkeitsbäume gross und kompliziert werden. "Jar-Hölle" folgt,
+      wobei die Version von Abhängigkeiten eines Systems nicht mit denen eines
+      anderen Systems übereinstimmt, entweder wegen Versionskonflikten oder
+      wegen gleicher Versionen von ähnlich klingenden Jar-Namen. Maven löst
+      beide Probleme durch den Einsatz des gemeinsamen Repositories gegen
+      welches alle Projekte gelinkt werden, inklusive Version und allem was
+      dazugehört. </para>
     </section>
 
     <section id="appendix-pom-sect-dependencies">
@@ -269,7 +293,7 @@ environment.  I'm following Eric's lead here, I wonder if I should.-->
       requires.</para>
 
       <para><example>
-          <title>Declaring Dependencies in a POM</title>
+          <title>Ausweisen von Abhängigkeiten in einem POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -325,8 +349,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         </listitem>
 
         <listitem>
-          <para>Set the dependency scope to system and define a systemPath.
-          </para>
+          <para>Set the dependency scope to system and define a
+          systemPath.</para>
         </listitem>
       </orderedlist>
 
@@ -479,7 +503,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       then we would add it as an exclusion.</para>
 
       <para><example>
-          <title>Configuring a Dependency Exclusion</title>
+          <title>Konfiguration eines Abhängigkeitsausschlusses</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -517,7 +541,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       making project inheritance explicit to the project object model.</para>
 
       <para><example>
-          <title>A Parent POM</title>
+          <title>Ein übergeordnetes POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -572,7 +596,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       </itemizedlist>
 
       <para><example>
-          <title>Project Inheritance in a Child POM</title>
+          <title>Projektvererbung in einem abgeleiteten POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -604,7 +628,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     POM.</para>
 
     <para><example>
-        <title>The Super POM</title>
+        <title>Das Super POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -750,7 +774,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     those projects.</para>
 
     <para><example>
-        <title>Defining Project Modules in a POM</title>
+        <title>Definition von Projekt Modulen in einem POM </title>
 
         <programlisting language="xml">&lt;project&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -788,27 +812,27 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       <listitem>
         <para>env.X: Prefixing a variable with "env." will return the shells
         environment variable. For example, $\{env.PATH\} contains the $path
-        environment variable (%PATH% in Windows). </para>
+        environment variable (%PATH% in Windows).</para>
       </listitem>
 
       <listitem>
         <para>project.x: A dot (.) notated path in the POM will contain the
         corresponding elements value. For example:
         &lt;project&gt;&lt;version&gt;1.0&lt;/version&gt;&lt;/project&gt; is
-        accessible via $\{project.version\}. </para>
+        accessible via $\{project.version\}.</para>
       </listitem>
 
       <listitem>
         <para>settings.x: A dot (.) notated path in the settings.xml will
         contain the corresponding elements value. For example:
         &lt;settings&gt;&lt;offline&gt;false&lt;/offline&gt;&lt;/settings&gt;
-        is accessible via $\{settings.offline\}. </para>
+        is accessible via $\{settings.offline\}.</para>
       </listitem>
 
       <listitem>
         <para>Java System Properties: All properties accessible via
         java.lang.System.getProperties() are available as POM properties, such
-        as $\{java.home\}. </para>
+        as $\{java.home\}.</para>
       </listitem>
 
       <listitem>
@@ -845,7 +869,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       </note>
 
       <para><example>
-          <title>Configuring Build Settings in POM</title>
+          <title>konfiguration von Build Einstellungen in einem POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   &lt;!-- "Project Build" contains more elements than just the BaseBuild set --&gt;
@@ -869,10 +893,9 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       between the two build elements in the POM.</para>
 
       <para><example>
-          <title>Top-level Elements in Build Configuration</title>
+          <title>Top-level Elemente einer Build Konfiguration </title>
 
-          <programlisting language="xml">
-&lt;build&gt;
+          <programlisting language="xml">&lt;build&gt;
   &lt;defaultGoal&gt;install&lt;/defaultGoal&gt;
   &lt;directory&gt;\${basedir}/target&lt;/directory&gt;
   &lt;finalName&gt;\${artifactId}-\${version}&lt;/finalName&gt;
@@ -892,7 +915,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
               <para>the default goal or phase to execute if none is given. If
               a goal is given, it should be defined as it is in the command
               line (such as jar:jar). The same goes for if a phase is defined
-              (such as install). </para>
+              (such as install).</para>
             </listitem>
           </varlistentry>
 
@@ -902,7 +925,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
             <listitem>
               <para>This is the directory where the build will dump its files
               or, in Maven parlance, the build's target. It aptly defaults to
-              \${basedir}/target. </para>
+              \${basedir}/target.</para>
             </listitem>
           </varlistentry>
 
@@ -918,7 +941,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
               this name (but they usually do not). For example, if the
               maven-jar-plugin is configured to give a jar a classifier of
               test, then the actual jar defined above will be built as
-              my-project-1.0-test.jar. </para>
+              my-project-1.0-test.jar.</para>
             </listitem>
           </varlistentry>
 
@@ -954,7 +977,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         resources similar to the following:</para>
 
         <para><example>
-            <title>Configuring Resources in a POM</title>
+            <title>Konfiguration von Resource-Dateien in einem POM</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1067,7 +1090,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         <title>Plugins</title>
 
         <para><example>
-            <title>Plugin Configuration in a POM</title>
+            <title>Konfiguration von Plugins in einem POM</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1155,7 +1178,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
             <term>executions</term>
 
             <listitem>
-              <para> It is important to keep in mind that a plugin may have
+              <para>It is important to keep in mind that a plugin may have
               multiple goals. Each goal may have a separate configuration,
               possibly even binding a plugin's goal to a different phase
               altogether. executions configure the execution of a plugins
@@ -1171,7 +1194,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         execution like this:</para>
 
         <para><example>
-            <title>Configuring an Execution in Plugin Configuration</title>
+            <title>Konfiguration einer Erweiterung innerhalb einer Plugin
+            Konfiguration</title>
 
             <programlisting language="xml">&lt;project&gt;
   ...
@@ -1272,7 +1296,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         definitions.</para>
 
         <para><example>
-            <title>Plugin Management in a POM's Build Configuration</title>
+            <title>Plugin Management in eines POM's Build
+            Konfiguration</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1312,7 +1337,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         child pom.xml, only the following is required:</para>
 
         <para><example>
-            <title>Adding a Plugin to a Parent POM</title>
+            <title>Hinzufügen eines Plugin zu einem übergeordneten POM</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1349,7 +1374,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         profiles.</para>
 
         <para><example>
-            <title>Configuring Directories in Build Configuration</title>
+            <title>Konfiguration von Verzeichnissen in einer Build
+            Konfiguration</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1384,7 +1410,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
         implementations of a common plugin interface.</para>
 
         <para><example>
-            <title>Declaring Extensions in Build Configuration</title>
+            <title>Ausweisen von Erweiterungen in einer Build
+            Konfiguration</title>
 
             <programlisting language="xml">&lt;project&gt;
   &lt;build&gt;
@@ -1431,7 +1458,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     turns off project-info reports.</para>
 
     <para><example>
-        <title>Configuring Reporting in a POM</title>
+        <title>Konfiguration des Reporting in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1468,7 +1495,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     reportSet would resemble the following:</para>
 
     <para><example>
-        <title>Configuring Properties for a Report Set</title>
+        <title>Konfiguraiton von Properties in einem Report Set</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1563,7 +1590,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     <title>Licenses</title>
 
     <para><example>
-        <title>Configuring Licenses in a POM</title>
+        <title>Konfiguration von Lizenzen in einem POM</title>
 
         <programlisting language="xml">&lt;licenses&gt;
   &lt;license&gt;
@@ -1600,7 +1627,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     set.</para>
 
     <para><example>
-        <title>Configuring Organizations in a POM</title>
+        <title>Konfiguration der Organisationen in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1627,7 +1654,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     here.</para>
 
     <para><example>
-        <title>Listing Developers in a POM</title>
+        <title>Ausführen von Entwicklern in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1715,7 +1742,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     have more contributors than developers.</para>
 
     <para><example>
-        <title>Listing Contributors in a POM</title>
+        <title>Ausführne der Beteiligten in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1753,7 +1780,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     project documentation.</para>
 
     <para><example>
-        <title>Declaring an Issue Management System in a POM</title>
+        <title>Deklaration eines Issue Management Systems in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1784,7 +1811,8 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     not sendOnSuccess or sendOnWarning.</para>
 
     <para><example>
-        <title>Configuring Continuous Integration in a POM</title>
+        <title>Konfiguration eines Continuous Integration Systems in einem
+        POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1815,7 +1843,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     about a project. Most mailing lists are for developers and users.</para>
 
     <para><example>
-        <title>Describing Project Mailing Lists in a POM</title>
+        <title>Beschreibung von Projekt Mailin Listen in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1880,7 +1908,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     into the POM.</para>
 
     <para><example>
-        <title>Descrbing Source Control in a POM</title>
+        <title>Beschreibung des Source Control Systems in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1926,7 +1954,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     <title>Prerequisites</title>
 
     <para><example>
-        <title>Declaring a Prerequisite for a Project</title>
+        <title>Ausführen der Vorbedingungen eines Projekts </title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -1967,7 +1995,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     iBiblio is the Codehaus snapshots repo.</para>
 
     <para><example>
-        <title>Configuring Repositories in a POM</title>
+        <title>Konfiguration der Repositorien in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -2046,7 +2074,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     build process. Starting with the last elements first:</para>
 
     <para><example>
-        <title>Configuring Distribution Management in a POM</title>
+        <title>Konfiguratin des Verteilmechanismus in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -2146,7 +2174,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       snapshotRepository is not defined.</para>
 
       <para><example>
-          <title>Configuring Distribution Repositories in a POM</title>
+          <title>Konfiguration eines Verteil Repositories in einem POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -2224,7 +2252,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       documentation.</para>
 
       <para><example>
-          <title>Configuring Site Distribution in a POM</title>
+          <title>Konfiguration der Site Veröffentlichung in einem POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -2250,7 +2278,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       <title>Relocation</title>
 
       <para><example>
-          <title>Configuring Relocation in a POM</title>
+          <title>Konfiguratin der Relokation in einem POM</title>
 
           <programlisting language="xml">&lt;project&gt;
   ...
@@ -2293,7 +2321,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
     elements of profiles are as follows:</para>
 
     <para><example>
-        <title>Configuring Profiles in a POM</title>
+        <title>Konfiguration von Profilen in einem POM</title>
 
         <programlisting language="xml">&lt;project&gt;
   ...
@@ -2324,7 +2352,7 @@ mvn install:install-file -Dfile=non-maven-proj.jar -DgroupId=some.group -Dartifa
       element.</para>
 
       <para><example>
-          <title>Configuring Profile Activation in a POM</title>
+          <title>Konfiguration von aktiven Profilen in einem POM </title>
 
           <programlisting language="xml">&lt;project&gt;
   ...

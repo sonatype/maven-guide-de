@@ -9,12 +9,13 @@
 
     <para>Das Element settings der <filename>setting.xml</filename> Datei
     beinhaltet die Elemente welche benutzt werden, die Laufzeitumgebung von
-    Maven zu konfigurieren. Einstellungen dieser Datei sind von solcher Natur,
-    dass diese über Projektgrenzen hinweg zum Einsatz kommen und daher nicht
-    an ein spezifisches Projekt gebunden sein sollten oder an eine bestimmte
-    Kundschaft verbreitet werden. Werte, welche darin enthalten sind, sind
-    z.B. die Einstellung des lokalen Repository, alternative Remote
-    Repositorien und Authentifizierungsdaten. Die
+    Maven zu konfigurieren. Einstellungen dieser Datei kommen über über
+    Projektgrenzen hinweg zum Einsatz und sind daher nicht an ein spezifisches
+    Projekt gebunden. Auch sollten diese Einstellungen dazu benutzt werden,
+    spwziefische Einstellungen and eine bestimmte Kundschaft zu verbreitet,
+    nutzen Sie dazu Benutzerprofile. Werte, welche in der settings.xml
+    enthalten sind, sind z.B. die Einstellung des lokalen Repository,
+    alternative Remote Repositorien und Authentifizierungsdaten. Die
     <filename>settings.xml</filename> kann bei einer Standardinstallation an
     zweierlei Orten aufgefunden werden:</para>
 
@@ -85,8 +86,6 @@
 </programlisting>
         </example></para>
 
-      <para>The simple top-level elements are:</para>
-
       <para>Diese top-level Wertangaben sind:</para>
 
       <variablelist>
@@ -94,9 +93,6 @@
           <term>localRepository</term>
 
           <listitem>
-            <para>This value is the path of this build system's local
-            repository. The default value is</para>
-
             <para>Dieser Wert bestimmt den Pfad des lokalen Repository des
             Build Systems. Der Standardwert ist<filename>
             \${user.dir}/.m2/repository</filename></para>
@@ -108,7 +104,7 @@
 
           <listitem>
             <para><varname>true</varname> sollte Maven auf Benutzereingaben
-            warten, ansonsten <varname>false</varname>. Standardwert
+            warten, ansonsten <varname>false</varname>. Standardwert ist
             <varname>true</varname>.</para>
           </listitem>
         </varlistentry>
@@ -132,7 +128,7 @@
             Modus arbeiten, Standardwert ist <varname>false</varname>. Dieser
             Wert ist insbesondere wichtig für serverseitige Build-Syteme,
             welche nicht auf ein externes Repository zugreifen dürfen, sei
-            dies aufgrund des Netzwerkes oder auch wegen
+            dies aufgrund des Netzwerkes oder auch wegen anderer
             Sicherheitsbestimmungen.</para>
           </listitem>
         </varlistentry>
@@ -157,14 +153,14 @@
 
       <para>Das Element <sgmltag>distributionManagement</sgmltag> eines
       <acronym>POM</acronym> definiert die Repositorien für die Verteilung.
-      Gewisse Angaben, wie z.B. die Security Credentials sollten nicht mit der
-      <filename>pom.xml</filename> Datei verteilt werden. Diese Art der
-      Angaben sollte auf einem Build Server in der
-      <filename>settings.xml</filename> Datei im Element
-      <varname>servers</varname> abgelegt werden:</para>
+      Gewisse Angaben, wie z.B. die geheimen Werte des Log-Ins der Security
+      Credentials, sollten nicht mit der <filename>pom.xml</filename> Datei
+      verteilt werden. Es ist vorgesehen, diese Art der Angaben auf einem
+      Build Server in der <filename>settings.xml</filename> Datei im Element
+      <varname>servers</varname> abzulegen:</para>
 
       <para><example>
-          <title>Server Konfiguration der settings.xml</title>
+          <title>Server Konfiguration innerhalb der settings.xml Datei</title>
 
           <programlisting language="xml">&lt;settings xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -188,7 +184,8 @@
 </programlisting>
         </example></para>
 
-      <para>Die Elemente unter <varname>server</varname> sind:</para>
+      <para>Die Elemente unter dem Element <varname>server</varname>
+      sind:</para>
 
       <variablelist>
         <varlistentry>
@@ -221,11 +218,11 @@
           <term>privateKey, passphrase</term>
 
           <listitem>
-            <para>Wie vorangehend ebenfalls zwei Elemente, dieses Paar
-            beschreibt den Pfad zu einem Privaten Schlüssel (Standardwert ist
-            <varname>\${user.home}/.ssh/id_dsa</varname>) und einer Passphrase,
-            sollte diese notwendig sein. Hinweis: Zukünftig sollte es möglich
-            sein die Elemente <varname>passphrase</varname> und
+            <para>Wie vorangehend ebenfalls ein paariges Element, diese
+            beschreiben den Pfad zu einem privaten Schlüssel (Standardwert ist
+            <varname>\${user.home}/.ssh/id_dsa</varname>) und einer
+            Passphrase, sollte diese notwendig sein. Hinweis: Zukünftig sollte
+            es möglich sein die Elemente <varname>passphrase</varname> und
             <varname>password</varname> zu externalisieren, zur Zeit jedoch
             müssen diese in Klartext in der <filename>settings.xml</filename>
             enthalten sein.</para>
@@ -366,12 +363,9 @@
             <term>protocol, host, port</term>
 
             <listitem>
-              <para>The <varname>protocol://host:port</varname> of the proxy,
-              separated into discrete elements.</para>
-
               <para>Die Bestandteile der URL des Proxy:
               <varname>protocol://host:port;</varname>die Elemente werden
-              getrennt geführt.</para>
+              getrennt aufgeführt.</para>
             </listitem>
           </varlistentry>
 
@@ -390,9 +384,9 @@
 
             <listitem>
               <para>Unter diesem Element befindet sich eine Liste der
-              Ressourcen welche nicht durch den Proxy abgebildet werden
+              Ressourcen welche nicht durch diesen Proxy abgebildet werden
               sollten. Das Trennsymbol der Liste ist das vom Proxy Server
-              erwartete Zeichen; in unserem Beispiel das ‚Pipe’-Symbol.
+              erwartete Trennzeichen; in unserem Beispiel das ‚Pipe’-Symbol.
               Ebenfalls häufig angewandt ist die Komma getrennte Liste.</para>
             </listitem>
           </varlistentry>
@@ -408,10 +402,11 @@
       <filename>pom.xml</filename>-Datei. Es besteht aus den Elementen
       <varname>activation</varname>, <varname>repositories</varname>,
       <varname>pluginRepositories</varname> und <varname>properties</varname>.
-      Das Element beinhaltet nur diese vier Elemente, da diese das Build
-      System als ganzes betreffen (welches der Rolle der
-      <varname>settings.xml</varname> entspricht) und nicht einzelne Aspekte
-      der Projekt Modell Einstellungen.</para>
+      Das Element als Bestandteil der <filename>settings.xml</filename>-Datei
+      beinhaltet nur diese vier Elemente, da diese das Build System als ganzes
+      betreffen (welches der Rolle der <varname>settings.xml</varname>
+      entspricht) und nicht einzelne Aspekte der
+      <acronym>POM</acronym>-Einstellungen.</para>
 
       <para>Wird ein Profil innerhalb einer <varname>settings.xml</varname>
       aktiviert, so übersteuert dies jedes entsprechende Profil einer
@@ -489,7 +484,7 @@
 
           <listitem>
             <para>Mittels des Elements <varname>os</varname> können, wie oben
-            ausgeführt, Betriebssystem spezifische Eigenschaften geprüft
+            ausgeführt, betriebssystemspezifische Eigenschaften geprüft
             werden.</para>
           </listitem>
         </varlistentry>
@@ -499,9 +494,9 @@
 
           <listitem>
             <para>Das Profil wird aktiviert, sollte Maven ein Property (ein
-            Wert, welcher innerhalb des POM mittels <varname>\${name}</varname>
-            referenziert werden kann) mit dem entsprechenden Wertepaar finden.
-            </para>
+            Wert, welcher innerhalb des POM mittels
+            <varname>\${name}</varname> referenziert werden kann) mit dem
+            entsprechenden Wertepaar finden.</para>
           </listitem>
         </varlistentry>
 
@@ -533,12 +528,12 @@
     <section id="appendix-settings-sect-properties">
       <title>Properties</title>
 
-      <para>Maven Properties sind ein Platzhalter für Werte - wie auch
+      <para>Maven Properties sind ein Platzhalter für Werte - entsprechend
       Properties unter Ant. Auf deren Werte ist mittels der Notation
-      <varname>\${x}</varname>, x ist der Name des Properties, von überall
-      innerhalb eines <acronym>POM</acronym> zuzugreifen. Properties kommen in
-      fünf verschiedenen Varianten, alle zugreifbar von innerhalb der
-      <filename>settings.xml</filename>:</para>
+      <varname>\${x}</varname>, von überall innerhalb eines
+      <acronym>POM</acronym> zuzugreifen; x ist hierbei der Name des
+      Properties. Properties kommen in fünf verschiedenen Varianten, alle auch
+      von innerhalb der <filename>settings.xml zugreifbar</filename>:</para>
 
       <variablelist>
         <varlistentry>
@@ -580,8 +575,8 @@
           <listitem>
             <para>Alle Properties welche durch
             <classname>java.lang.System.getProperties()</classname>
-            offengelegt werden sind ebenfalls als POM Properties zugänglich,
-            so zum Beispiel das Property
+            offengelegt werden sind ebenfalls als <acronym>POM</acronym>
+            Properties zugänglich, so zum Beispiel das Property
             <varname>\${java.home}</varname>.</para>
           </listitem>
         </varlistentry>
@@ -620,16 +615,16 @@
 </programlisting>
         </example></para>
 
-      <para>Das Property <varname>\${user.install}</varname> ist für dieses POM
-      zugänglich, wenn das Profil aktiv ist.</para>
+      <para>Das Property <varname>\${user.install}</varname> ist für dieses
+      <acronym>POM</acronym> zugänglich, sobald das Profil aktiv ist.</para>
     </section>
 
     <section id="appendix-settings-sect-settings-repository">
       <title>Repositories</title>
 
-      <para>Repositorien sind entfernte Objektsammlungen, von welchen Maven
-      das lokale Repository bestückt. Von diesem lokalen Repository ruft Maven
-      die entsprechenden Abhängigkeiten oder Plugins ab. Verschiedene ferne
+      <para>Repositorien sind Objektsammlungen, von welchen Maven das lokale
+      Repository bestückt. Von diesem lokalen Repository ruft Maven die
+      entsprechenden Abhängigkeiten oder Plugins ab. Unterschiedliche ferne
       Repositorien können verschiedene Projekte enthalten, und mittels aktiver
       Profile können diese nach entsprechenden Releases und Snapshot
       Artefakten durchsucht werden.</para>
@@ -684,8 +679,9 @@
               Gruppen hat ein <acronym>POM</acronym> die Möglichkeit die
               Regeln innerhalb eines Repositories typspezifisch und unabhängig
               von den anderen Typen anzupassen. Zum Beispiel kann man eine
-              Einschränkung erstellen welche es nur erlaubt in der Entwicklung
-              <varname>snapshot</varname> Artefakte herunterzuladen.</para>
+              Einschränkung erstellen, welche es nur erlaubt in der
+              Entwicklung <varname>snapshot</varname> Artefakte
+              herunterzuladen.</para>
             </listitem>
           </varlistentry>
 
@@ -720,7 +716,7 @@
 
             <listitem>
               <para>Wann immer Maven eine Datei in ein Repository einstellt,
-              wird ebenfalls eine Quersummendatei eingesetellt. Sie haben hier
+              wird ebenfalls eine Quersummendatei eingestellt. Sie haben hier
               die Wahlmöglichkeit bezüglich <varname>ignore</varname>,
               <varname>fail</varname>, oder <varname>warn</varname> sollte
               eine Quersummendatei fehlen oder fehlerhaft sein.</para>
@@ -822,11 +818,165 @@
       ungeachtet jeglicher Umgebungseinflüsse. Sollte kein entsprechendes
       Profil gefunden werden, so wird nichts passieren. So wird zum Beispiel,
       sollte <varname>env-test</varname> ein aktives Profil in
-      <varname>activeProfile</varname> sein, ein Profil einer
-      <filename>pom.xml</filename> (oder auch
-      <filename>profile.xml</filename>) mit einer entsprechenden <varname>id
-      </varname>aktiviert. Sollte kein solches Profil gefunden werden, so wird
-      die Verarbeitung unberührt fortfahren.</para>
+      <varname>activeProfile</varname> sein, ein Profil mit entsprechender id
+      in einer <filename>pom.xml-Datei</filename> (oder auch
+      <filename>profile.xml</filename>-Datei) aktiviert. Sollte kein solches
+      Profil gefunden werden, so wird die Verarbeitung unberührt
+      fortfahren.</para>
+
+      <para></para>
+    </section>
+
+    <section id="appendix-settings-sect-encrypting-passwords">
+      <title>Verschlüsseln von Passwörtern in den Maven Settings (ab Version
+      2.1.x)</title>
+
+      <para>Sobald Sie damit anfangen mittels Maven Software automatisiert in
+      entfernte Repositorien einzustellen, mit Quellcode Verwaltungssystemen
+      (SVN/CVS/etc.) zu interagieren werden Sie schnell eine Anzahl
+      verschiedener Passwörter in einer settings.xml-Datei sammeln. Ohne einen
+      Mechanismus diese zu verschlüsseln wird eine Entwicklerseitige
+      ~/.m2/settings.xml-Datei schnell zu einem grossen Sicherheitsrisiko, da
+      diese eine ganze Anzahl interessanter Passwörter für den Zugriff auf
+      Source Control sowie Repositorien im Klartext enthält. Maven 2.1 führt
+      daher einen Mechanismus ein, um Passwörter innerhalb der
+      benutzerspezifischen settings.xml-Datei zu verschlüsseln. Um diesen
+      Mechanismus zu benutzen müssen Sie zunächst ein Masterpasswort erstellen
+      und dies in einer Datei ~/.m2/settings-security.xml ablegen. Sie können
+      nachfolgend dieses Passwort benutzen, um die in der Maven Settings-Datei
+      (~/.m2/settings.xml) enthaltenen Passwörter zu verschlüsseln. </para>
+
+      <para>Um die Arbeitsweise dieser Funktionalität zu veranschaulichen,
+      betrachten Sie den Prozess, welchen maven benutzt, um das
+      unverschlüsselte Passwort aus einer benutzerspezifischen Maven
+      Settings-Datei auszulesen, dargestellt in <xref
+      linkend="fig-settings-unencrypted" />. Ein Benutzer wird einen
+      Bestimmten Server mittels eines Bezeichners (id) innerhalb eines POM
+      identifizieren, Maven sucht daraufhin nach einem entsprechenden Server
+      in der Liste aller Server der Maven Einstellungen (settings.xml-Datei).
+      Sobald es einen entsprechenden Eintrag in den Elementen server gefunden
+      hat, wird Maven die abgelagten Daten benutzen und diese dem Server
+      übermitteln. Da das Password im Klartext in der Datei settings.xml
+      vorliegt, steht es auch jedem bereit welcher Zugang zu dieser Datei hat.
+      </para>
+
+      <figure id="fig-settings-unencrypted">
+        <title>Ungesichertes Ablegen von Passswörtern in der Maven Settings
+        Datei</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figs/web/settings_password-no-encryption.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Betrachten Sie nun den Ablauf welcher ab Maven 2.1.x zum Zuge
+      kommt um verschlüsselte Passwörter zu unterstützen, wie dieser in <xref
+      linkend="fig-settings-encrypted" /> dargestellt ist:</para>
+
+      <figure id="fig-settings-encrypted">
+        <title>Storing Encrypted Passwords in Maven Settings</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figs/web/settings_password-encryption.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Um verschlüsselte Passwörter zu konfigurieren, erstellen Sie
+      zunächst ein Master Passwort mittels dem Befehl <command>mvn
+      -emp</command> oder <command>mvn --encrypt-master-passwort</command>
+      gefolgt von Ihrem Master Passwort </para>
+
+      <screen>$ <command>mvn -emp mypassword</command>
+{rsB56BJcqoEHZqEZ0R1VR4TIspmODx1Ln8/PVvsgaGw=}</screen>
+
+      <para>Maven gibt Ihnen eine verschlüsselte Kopie Ihres Master Passwortes
+      auf der Standardausgabe wieder. Legen Sie dieses (verschlüsselte) Master
+      Passwort in der Datei ~/.m2/settings-security.xml ab wie dies in der
+      folgenden Darstellung gezeigt wird</para>
+
+      <example id="ex-settings-master-password">
+        <title>settings-security.xml mit Master Password</title>
+
+        <programlisting>&lt;settingsSecurity&gt;
+  &lt;master&gt;{rsB56BJcqoEHZqEZ0R1VR4TIspmODx1Ln8/PVvsgaGw=}&lt;/master&gt;
+&lt;/settingsSecurity&gt;
+</programlisting>
+      </example>
+
+      <para>Nachdem sie ein Master Passwort erstellt haben, können Sie die
+      Passwörter Ihrer Maven Settings verschlüsseln. Um ein Passwort mit Ihrem
+      Master Passwort zu verschlüsseln, geben Sie <command>mvn -ep
+      &lt;passwort&gt;</command> oder <command>mvn --encrypt-pasword
+      &lt;passwort&gt;</command> ein. Angenommen sie haben einen Repository
+      Manager und müssen sich mit dem Usernamen "deployment" und dem Passwort
+      "qualityFIRST" verbinden, so werden Sie um dieses Passwort zu
+      verschlüsseln den folgenden Befehl eingeben: </para>
+
+      <screen>$ <command>mvn -ep qualityFIRST</command>
+{uMrbEOEf/VQHnc0W2X49Qab75j9LSTwiM3mg2LCrOzI=}</screen>
+
+      <para>Das von mvn -ep augegebene, verschlüsselte Passwort setzen Sie nun
+      in Ihre Maven Settings Datei (settings.xml) ein. </para>
+
+      <example>
+        <title>Storing an Encrypted Password in Maven Settings
+        (~/.m2/settings.xml)</title>
+
+        <programlisting>&lt;settings&gt;
+  &lt;servers&gt;
+    &lt;server&gt;
+      &lt;id&gt;nexus&lt;/id&gt;
+      &lt;username&gt;deployment&lt;/username&gt;
+      &lt;password&gt;{uMrbEOEf/VQHnc0W2X49Qab75j9LSTwiM3mg2LCrOzI=}&lt;/password&gt;
+    &lt;/server&gt;
+  &lt;/servers&gt;
+  ...
+&lt;/settings&gt;</programlisting>
+      </example>
+
+      <para>Sobald sie nun einen Build anstossen, welcher mit dem
+      entsprechenden Repository Manager interagieren muss, so wird Maven das
+      Master Passwort aus der Datei ~/.m2/settings-security.xml anziehen, um
+      hiermit das entsprechende Password aus der ~/.m2/settings.xml zu
+      entschlüsseln und dieses entschlüsselt an den Server weiterzuleiten.
+      </para>
+
+      <para>Und was haben Sie davon? Es erlaubt Ihnen es zu vermeiden, dass
+      Passwörter ungeschützt in Klartext in der Datei ~/.m2/settings.xml
+      abgelegt sind. Beachten Sie aber bitte, dass dies nicht für die
+      Verschlüsselung des Passwortes während der Übermittlung an den
+      entfernten Server sorgt. Ein Angreifer könnte somit das Passwort
+      immernoch mittels Netzwerkanalyse Werkzeugen in erfahrung bringen.
+      </para>
+
+      <para>Um die Sicherheit weiter zu erhöhen, könnten Sie Ihre Entwickler
+      dazu anhalten, das verschlüsselte Master Passwort auf einem portablen
+      Speichermedium wie zum Beispiel einem USB Stick aufzubewahren. Bei
+      diesem Ansatz wird das Medium nur dann an den Rechner angeschossen, wenn
+      eine Interaktion mit einem entfernten Dienst notwendig ist. Um dies zu
+      unterstützen, würde Ihre Datei ~/.m2/settings-security.xml-Datei eine
+      Referenz auf den tatsächlichen Ort der settings-security.xml Datei
+      mittels dem Element relocation enthalten:</para>
+
+      <example>
+        <title>Konfiguration einer umgeleiteten Datei Settings Security des
+        Master Passwortes</title>
+
+        <programlisting>&lt;settingsSecurity&gt;
+  &lt;relocation&gt;/Volumes/usb-key/settings-security.xml&lt;/relocation&gt;
+&lt;/settingsSecurity&gt;
+</programlisting>
+      </example>
+
+      <para>Der Entwickler würde im oben angegebenen Beispiel die tatsächliche
+      Datei Settings-Security unter
+      <filename>/Volumes/usb-key/settings-security.xml ablegen, welche nur zu
+      der Zeit zur Verfügung steht,</filename> wenn der Entwickler tatsächlich
+      am Arbeitsplatz ist. </para>
     </section>
   </section>
 </appendix>
